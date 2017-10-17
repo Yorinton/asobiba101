@@ -9,15 +9,15 @@ class Number
 
 	public function __construct(Int $number,Plan $plan)
 	{
-		if(!isAcceptableNumber($number,$plan)){
+		if(!$this->isAcceptableNumber($number,$plan)){
 			throw new \InvalidArgumentException('適切な利用人数を設定して下さい');
 		}
 		$this->number = $number;
 	}
 
-	public function isAcceptableNumber(Int $number,Plan $plan): boolean
+	public function isAcceptableNumber(Int $number,Plan $plan): bool
 	{
-		if ($number > $plan->capacity) {
+		if ($number > $plan->getCapacity()) {
 			return false;
 		}
 		return true;

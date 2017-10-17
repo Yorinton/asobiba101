@@ -10,16 +10,21 @@ class Question
 	
 	private $question;
 
-	public function __construct(String $question)
+	public function __construct(String $question = null)
 	{
 		$this->question = $question;
 	}
 
-	public function isQuestion(): boolean
+	public function isQuestion(): bool
 	{
-		return $this->question !== '';
+		return isset($this->question);
+		// return $this->question !== '';
 	}
 
+	public function getQuestion(): String
+	{
+		return $this->question;
+	}
 
 }
 

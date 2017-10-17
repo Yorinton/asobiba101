@@ -8,6 +8,8 @@ class Options
 	
 	private $options;
 
+	private $totalPrice;
+
 	private $optionSet = [
 		'ゴミ処理' => 1500,
 		'コタツ(布団付き)' => 3000,
@@ -39,22 +41,24 @@ class Options
 	public function totalOptionPrice(): int
 	{
 		foreach($this->options as $option){
-			$totalPrice += $this->optionSet[$option];
+			$this->totalPrice += $this->optionSet[$option];
 		}
-		return (int)$totalPrice;
+		return (int)$this->totalPrice;
 	}
 
-	public function hasLargeGroupOption(): boolean
+	public function hasLargeGroupOption(): bool
 	{
-		return in_array('大人数', $this->options, true);
+		return in_array('大人数レイアウト', $this->options, true);
 	}
 
-	public function hasStayOption(): boolean
+	public function hasStayOption(): bool
 	{
-		return in_array('宿泊', $this->options, true);
+		$stay = in_array('宿泊(1〜3名様)', $this->options, true);
+		$stay2 = in_array('宿泊(4〜5名様)', $this->options, true);
+		return $stay && $stay2;
 	}
 
-	public function hasMidnightOption(): boolean
+	public function hasMidnightOption(): bool
 	{
 		return in_array('深夜利用', $this->options, true);		
 	}

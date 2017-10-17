@@ -14,29 +14,50 @@ class Reservation
 {
 	
 	/** @var Request */
-	private $reservation;
+	public $reservation;
 
 	/** @var Options */
-	private $options;
+	public $options;
 
 	/** @var Plan */
-	private $plan;
+	public $plan;
 
 	/** @var Number */
-	private $number;
+	public $number;
 
 	/** @var Date */
-	private $date;
+	public $date;
 
 	/** @var Question */
-	private $question;
+	public $question;
 
 	public function __construct(Request $request)
 	{
 		$this->reservation = $request;
 		$this->options = new Options($request->options);
-		$this->plan = new Plan($request->plan,$options);
-		$this->number = new Number($request->number,$plan);
+		$this->plan = new Plan($request->plan,$this->options);
+		$this->number = new Number($request->number,$this->plan);
+		$this->question = new Question($request->question);
+	}
+
+	public function totalPrice(): int
+	{
+		return $this->options->totalOptionPrice() + $this->plan->getBasePrice();
+	}
+
+	public function Capacity(): int
+	{
+		return $this->plan->getCapacity();
+	}
+
+	public function Question(): String
+	{
+		return $this->question->getQuestion();
+	}
+
+	public function hasQuestion(): bool
+	{
+		return $this->question->isQuestion();
 	}
 
 }
