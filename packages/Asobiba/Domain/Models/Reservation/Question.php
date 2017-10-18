@@ -2,9 +2,7 @@
 
 namespace Asobiba\Domain\Models\Reservation;
 
-/**
-* 
-*/
+
 class Question
 {
 	

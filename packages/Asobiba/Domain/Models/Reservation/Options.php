@@ -38,6 +38,7 @@ class Options
 		$this->options = $options;
 	}
 
+	//Priceクラスに分割？
 	public function totalOptionPrice(): int
 	{
 		foreach($this->options as $option){
