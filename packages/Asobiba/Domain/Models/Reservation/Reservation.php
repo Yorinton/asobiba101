@@ -2,13 +2,6 @@
 
 namespace Asobiba\Domain\Models\Reservation;
 
-// use Illuminate\Http\Request;
-use Asobiba\Domain\Models\Reservation\Options;
-use Asobiba\Domain\Models\Reservation\Plan;
-use Asobiba\Domain\Models\Reservation\Number;
-use Asobiba\Domain\Models\Reservation\Question;
-use Asobiba\Domain\Models\Reservation\Date;
-
 
 //リクエストに依存しないように変更
 class Reservation
@@ -106,6 +99,46 @@ class Reservation
 	{
 		return $this->plan->hasShortTimePlan();
 	}
+
+    /**
+     * @return Options
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @return Plan
+     */
+    public function getPlan()
+    {
+        return $this->plan;
+    }
+
+    /**
+     * @return Number
+     */
+    public function getNumber()
+    {
+        return $this->number;
+    }
+
+    /**
+     * @return DateOfUse
+     */
+    public function getDateOfUse()
+    {
+        return $this->dateOfUse;
+    }
+
+    /**
+     * @return Question
+     */
+    public function getQuestion()
+    {
+        return $this->question;
+    }
 
 }
 
