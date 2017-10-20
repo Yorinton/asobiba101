@@ -22,13 +22,13 @@ class ReservationTest extends TestCase
 
         $request = makeCorrectRequest();
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         $reservation = new Reservation(
             $request->options,
             $request->plan,
             $request->number,
-            $dateOfUse,
+            $request->date,
+            $request->start_time,
+            $request->end_time,
             $request->question
         );
 
@@ -45,13 +45,13 @@ class ReservationTest extends TestCase
     {
         $request = makeCorrectRequest();
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         $reservation = new Reservation(
             $request->options,
             $request->plan,
             $request->number,
-            $dateOfUse,
+            $request->date,
+            $request->start_time,
+            $request->end_time,
             $request->question
         );
         $this->assertEquals($reservation->totalPrice(),28500);
@@ -67,14 +67,14 @@ class ReservationTest extends TestCase
         $request = makeCorrectRequest();
         $request->number = 13;
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );          
             $this->fail('例外発生無し');
@@ -89,14 +89,14 @@ class ReservationTest extends TestCase
         $request->plan = '【商用】基本１日プラン';
         $request->number = 16;
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );             
             $this->fail('例外発生無し');
@@ -112,14 +112,14 @@ class ReservationTest extends TestCase
         $request->options[] = '大人数レイアウト';
         $request->number = 16;
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );             
             $this->fail('例外発生無し');
@@ -134,14 +134,14 @@ class ReservationTest extends TestCase
         $request = makeCorrectRequest();
         $request->number = 11;
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             ); 
             $this->assertTrue(true);
@@ -157,14 +157,14 @@ class ReservationTest extends TestCase
         $request->plan = '【商用】基本１日プラン';
         $request->number = 13;
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             ); 
             $this->assertTrue(true);
@@ -179,14 +179,14 @@ class ReservationTest extends TestCase
         $request->options[] = '大人数レイアウト';
         $request->number = 15;
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             ); 
             $this->assertTrue(true);
@@ -204,13 +204,13 @@ class ReservationTest extends TestCase
     {
         $request = makeCorrectRequest();
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         $reservation = new Reservation(
             $request->options,
             $request->plan,
             $request->number,
-            $dateOfUse,
+            $request->date,
+            $request->start_time,
+            $request->end_time,
             $request->question
         ); 
 
@@ -221,13 +221,13 @@ class ReservationTest extends TestCase
     {
         $request = makeCorrectRequest();
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         $reservation = new Reservation(
             $request->options,
             $request->plan,
             $request->number,
-            $dateOfUse,
+            $request->date,
+            $request->start_time,
+            $request->end_time,
             $request->question
         ); 
 
@@ -239,13 +239,13 @@ class ReservationTest extends TestCase
         $request = makeCorrectRequest();
         unset($request->question);
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         $reservation = new Reservation(
             $request->options,
             $request->plan,
             $request->number,
-            $dateOfUse,                
+            $request->date,
+            $request->start_time,
+            $request->end_time,
             $request->question
         ); 
 
@@ -261,14 +261,14 @@ class ReservationTest extends TestCase
     {
         $request = makeCorrectRequest();
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,                
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );
             $this->assertTrue(true);
@@ -281,15 +281,16 @@ class ReservationTest extends TestCase
     {
         $request = makeCorrectRequest();
         $request->end_time = '23';
-
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
+        $request->options[2] = '';
 
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,                
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );
             $this->assertTrue(true);
@@ -303,15 +304,18 @@ class ReservationTest extends TestCase
     {
         $request = makeCorrectRequest();
         $request->plan = '【商用】3時間パック';
-
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
+        $request->start_time = 15;
+        $request->end_time = 18;
+        $request->options[2] = '';
 
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,                
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );
             $this->assertTrue(true);
@@ -325,17 +329,17 @@ class ReservationTest extends TestCase
     {
         $request = makeCorrectRequest();
         $request->plan = '【商用】3時間パック';
-        $request->start_time = '11';
-        $request->end_time = '16';
-
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
+        $request->start_time = 17;
+        $request->end_time = 22;
 
         try{
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,                
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );
             $this->assertTrue(true);
@@ -350,36 +354,95 @@ class ReservationTest extends TestCase
         $request = makeCorrectRequest();
         $request2 = makeOtherRequest();
 
-        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
-        $dateOfUse2 = new DateOfUse($request2->date,$request2->start_time,$request2->end_time);
 
         try {
             $reservation = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );
             $reservation2 = new Reservation(
                 $request2->options,
                 $request2->plan,
                 $request2->number,
-                $dateOfUse2,
+                $request2->date,
+                $request2->start_time,
+                $request2->end_time,
                 $request2->question
             );
             $reservation3 = new Reservation(
                 $request->options,
                 $request->plan,
                 $request->number,
-                $dateOfUse,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
                 $request->question
             );
             $this->assertEquals($reservation->getNumber()->getNumberOfGuests(),$reservation2->getNumber()->getNumberOfGuests());
             $this->assertTrue($reservation->totalPrice() !== $reservation2->totalPrice());
             $this->assertTrue($reservation !== $reservation3);//同じ値を代入しても異なるオブジェクトになる
+            $this->assertTrue(true);
         }catch(\Exception $e){
             $this->fail($e->getMessage());
+        }
+    }
+
+    public function testEditEndTimeDependentOptions()
+    {
+        $request = makeOtherRequest();
+
+        try{
+            $reservation = new Reservation(
+                $request->options,
+                $request->plan,
+                $request->number,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
+                $request->question
+            );
+            $this->assertEquals($reservation->getDateOfUse()->getEndTime(),9);
+        }catch(\Exception $e){
+            $this->fail($e->getMessage());
+        }
+
+        $request = makeCorrectRequest();
+        $request->options[2] = '深夜利用';
+        try{
+            $reservation = new Reservation(
+                $request->options,
+                $request->plan,
+                $request->number,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
+                $request->question
+            );
+            $this->assertEquals($reservation->getDateOfUse()->getEndTime(),24);
+        }catch(\Exception $e){
+            $this->fail($e->getMessage());
+        }
+
+        $request = makeCorrectRequest();
+        $request->plan = '【商用】お昼5時間パック';
+        try{
+            $reservation = new Reservation(
+                $request->options,
+                $request->plan,
+                $request->number,
+                $request->date,
+                $request->start_time,
+                $request->end_time,
+                $request->question
+            );
+            $this->fail('例外無し');
+        }catch(\Exception $e){
+            $this->assertEquals('深夜利用or宿泊オプションご希望の場合は「基本プラン」か「夜5時間パック」、もしくは夜22時まで利用するプランをご利用下さい',$e->getMessage());
         }
     }
 

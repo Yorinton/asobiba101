@@ -51,8 +51,9 @@ class Plan
 
 	public function __construct(String $plan,Options $options)
 	{
-		$this->plan = $plan;
-		$this->price = $this->setBasePrice($plan);
+        $this->isAcceptablePlanDependentOptions($plan,$options);
+        $this->plan = $plan;
+        $this->price = $this->setBasePrice($plan);
 		$this->capacity = $this->setCapacity($plan,$options);
 	}
 
@@ -113,6 +114,29 @@ class Plan
 	        return 3;
         }
 	}
+	public function getAcceptableUtilizationTimeDependentOptions(Options $options): int
+    {
+        if($options->hasMidnightOption()){
+            return $this->getAcceptableUtilizationTime() + 2;
+        }
+        if($options->hasStayOption()){
+            return $this->getAcceptableUtilizationTime() + 11;
+        }
+        return $this->getAcceptableUtilizationTime();
+    }
+
+    private function isAcceptablePlanDependentOptions(String $plan,Options $options)
+    {
+        if(($options->hasMidnightOption() || $options->hasStayOption()) && strpos($plan,'昼')){
+            throw new \InvalidArgumentException('深夜利用or宿泊オプションご希望の場合は「基本プラン」か「夜5時間パック」、もしくは夜22時まで利用するプランをご利用下さい');
+        }
+    }
+
+    public function haveToCheckEndtime(Options $options):bool
+    {
+        return ($options->hasMidnightOption() || $options->hasStayOption()) && (strpos($this->plan, '2時間') || strpos($this->plan, '3時間'));
+    }
+
     private function hasTwoHourPlan()
     {
         return strpos($this->plan,'2時間');

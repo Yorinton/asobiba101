@@ -56,7 +56,7 @@ class Options
 	{
 		$stay = in_array('宿泊(1〜3名様)', $this->options, true);
 		$stay2 = in_array('宿泊(4〜5名様)', $this->options, true);
-		return $stay && $stay2;
+		return $stay || $stay2;
 	}
 
 	public function hasMidnightOption(): bool

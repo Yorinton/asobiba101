@@ -27,14 +27,20 @@ class Reservation
 		array $options,
 		string $plan,
 		int $number,
-		DateOfUse $dateOfUse,
+		string $date,
+		int $start_time,
+		int $end_time,
 		string $question = null
-
 	){
-
 		$this->options = new Options($options);
 		$this->plan = new Plan($plan,$this->options);
-		$this->dateOfUse = $dateOfUse;
+
+		if($this->plan->haveToCheckEndtime($this->options) && $end_time < 22){
+		    throw new \InvalidArgumentException('深夜利用or宿泊オプションご希望の場合は、22時までのプランをご利用下さい');
+        }
+
+		$fixed_end_time = $this->editEndTimeDependentOption($end_time);
+		$this->dateOfUse = new DateOfUse($date,$start_time,$fixed_end_time);
 		$this->isAcceptableUseTime();
 		$this->number = new Number($number,$this->plan);
 		$this->question = new Question($question);
@@ -46,13 +52,21 @@ class Reservation
 		return $this->options->totalOptionPrice() + $this->plan->getBasePrice();
 	}
 
-
 	public function Capacity(): int
 	{
 		return $this->plan->getCapacity();
 	}
 
-
+	private function editEndTimeDependentOption(int $end_time): int
+    {
+        if($this->options->hasMidnightOption()){
+            return 24;
+        }
+        if($this->options->hasStayOption()){
+            return 9;
+        }
+        return $end_time;
+    }
 
 	public function Question(): string
 	{
@@ -82,7 +96,10 @@ class Reservation
 
 	private function isAcceptableUtilizationTime():bool
 	{
-		return $this->dateOfUse->getEndTime() - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableUtilizationTime();
+	    if($this->options->hasStayOption()){
+            return $this->dateOfUse->getEndTime() + 24 - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableUtilizationTimeDependentOptions($this->options);
+        }
+		return $this->dateOfUse->getEndTime() - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableUtilizationTimeDependentOptions($this->options);
 	}
 
 	private function isAcceptableStartTime():bool
@@ -90,10 +107,18 @@ class Reservation
 		return $this->dateOfUse->getStartTime() >= $this->plan->getAcceptableStartTime();
 	}
 
+
 	private function isAcceptableEndTime():bool
 	{
-		return $this->dateOfUse->getEndTime() <= $this->plan->getAcceptableEndTime();
+	    if($this->options->hasMidnightOption()){
+	        return $this->dateOfUse->getEndTime() === 24;
+        }
+        if($this->options->hasStayOption()){
+	        return $this->dateOfUse->getEndTime() === 9;
+        }
+        return $this->dateOfUse->getEndTime() <= $this->plan->getAcceptableEndTime();
 	}
+
 
 	private function hasShortTimePlan():bool
 	{
