@@ -299,7 +299,7 @@ class ReservationTest extends TestCase
         }
     }
 
-    public function testNotAcceptableTimeOneShortPlan()
+    public function testNotAcceptableTimeShortPlan()
     {
         $request = makeCorrectRequest();
         $request->plan = '【商用】3時間パック';
@@ -321,7 +321,7 @@ class ReservationTest extends TestCase
         }
     }
 
-    public function testNotAcceptableUtilizationTimeOneShortPlan()
+    public function testNotAcceptableUtilizationTimeShortPlan()
     {
         $request = makeCorrectRequest();
         $request->plan = '【商用】3時間パック';
@@ -345,5 +345,42 @@ class ReservationTest extends TestCase
         }
     }
 
+    public function testOtherNameReference()
+    {
+        $request = makeCorrectRequest();
+        $request2 = makeOtherRequest();
+
+        $dateOfUse = new DateOfUse($request->date,$request->start_time,$request->end_time);
+        $dateOfUse2 = new DateOfUse($request2->date,$request2->start_time,$request2->end_time);
+
+        try {
+            $reservation = new Reservation(
+                $request->options,
+                $request->plan,
+                $request->number,
+                $dateOfUse,
+                $request->question
+            );
+            $reservation2 = new Reservation(
+                $request2->options,
+                $request2->plan,
+                $request2->number,
+                $dateOfUse2,
+                $request2->question
+            );
+            $reservation3 = new Reservation(
+                $request->options,
+                $request->plan,
+                $request->number,
+                $dateOfUse,
+                $request->question
+            );
+            $this->assertEquals($reservation->getNumber()->getNumberOfGuests(),$reservation2->getNumber()->getNumberOfGuests());
+            $this->assertTrue($reservation->totalPrice() !== $reservation2->totalPrice());
+            $this->assertTrue($reservation !== $reservation3);//同じ値を代入しても異なるオブジェクトになる
+        }catch(\Exception $e){
+            $this->fail($e->getMessage());
+        }
+    }
 
 }

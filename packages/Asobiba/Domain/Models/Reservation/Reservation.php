@@ -8,19 +8,19 @@ class Reservation
 {
 
 	/** @var Options */
-	public $options;
+	private $options;
 
 	/** @var Plan */
-	public $plan;
+    private $plan;
 
 	/** @var Number */
-	public $number;
+    private $number;
 
 	/** @var DateOfUse */
-	public $dateOfUse;
+    private $dateOfUse;
 
 	/** @var Question */
-	public $question;
+    private $question;
 
 	// public function __construct(Array $options,)
 	public function __construct(
@@ -82,7 +82,7 @@ class Reservation
 
 	private function isAcceptableUtilizationTime():bool
 	{
-		return $this->dateOfUse->getEndTime() - $this->dateOfUse->getStartTime() >= $this->plan->getAcceptableUtilizationTime();
+		return $this->dateOfUse->getEndTime() - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableUtilizationTime();
 	}
 
 	private function isAcceptableStartTime():bool
@@ -103,7 +103,7 @@ class Reservation
     /**
      * @return Options
      */
-    public function getOptions()
+    public function getOptions(): Options
     {
         return $this->options;
     }
@@ -111,7 +111,7 @@ class Reservation
     /**
      * @return Plan
      */
-    public function getPlan()
+    public function getPlan(): Plan
     {
         return $this->plan;
     }
@@ -119,7 +119,7 @@ class Reservation
     /**
      * @return Number
      */
-    public function getNumber()
+    public function getNumber(): Number
     {
         return $this->number;
     }
@@ -127,7 +127,7 @@ class Reservation
     /**
      * @return DateOfUse
      */
-    public function getDateOfUse()
+    public function getDateOfUse(): DateOfUse
     {
         return $this->dateOfUse;
     }
@@ -135,7 +135,7 @@ class Reservation
     /**
      * @return Question
      */
-    public function getQuestion()
+    public function getQuestion(): Question
     {
         return $this->question;
     }

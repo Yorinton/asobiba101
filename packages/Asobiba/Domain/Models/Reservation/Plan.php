@@ -103,8 +103,27 @@ class Plan
 
 	public function getAcceptableUtilizationTime():int
 	{
-		return (int)$this->endTimeSet[$this->plan] - $this->startTimeSet[$this->plan];
+	    if(!$this->hasShortTimePlan()) {
+            return (int)$this->endTimeSet[$this->plan] - $this->startTimeSet[$this->plan];
+        }
+        if($this->hasTwoHourPlan()){
+	        return 2;
+        }
+        if($this->hasThreeHourPlan()){
+	        return 3;
+        }
 	}
+    private function hasTwoHourPlan()
+    {
+        return strpos($this->plan,'2時間');
+    }
+	private function hasThreeHourPlan()
+    {
+        return strpos($this->plan,'3時間');
+    }
+
+
+
 }
 
 

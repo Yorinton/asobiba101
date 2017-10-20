@@ -16,5 +16,21 @@ function makeCorrectRequest()
 	return $request;
 }
 
+function makeOtherRequest()
+{
+    $request = new Illuminate\Http\Request();
+    $request->name = 'テストユーザー2';
+    $request->email = 'te106700@gmail.com';
+    $request->plan = '【商用】3時間パック';
+    $request->options = ['ゴミ処理','宿泊(1〜3名様)','電気グリル鍋'];
+    $request->date = '2018-03-12';
+    $request->start_time = '12';
+    $request->end_time = '15';
+    $request->number = '10';
+    $request->question = 'いくらになりますか？';
+
+    return $request;
+}
+
 
 ?>

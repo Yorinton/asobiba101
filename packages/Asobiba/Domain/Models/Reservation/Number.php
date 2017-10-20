@@ -23,6 +23,14 @@ class Number
 		return true;
 	}
 
+    /**
+     * @return Int
+     */
+    public function getNumberOfGuests(): int
+    {
+        return $this->number;
+    }
+
 }
 
 

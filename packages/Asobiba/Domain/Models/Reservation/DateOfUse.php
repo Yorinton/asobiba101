@@ -3,9 +3,7 @@
 namespace Asobiba\Domain\Models\Reservation;
 
 
-use \DateTime;
-
-class DateOfUse extends DateTime
+class DateOfUse
 {
 
 	private $date;
