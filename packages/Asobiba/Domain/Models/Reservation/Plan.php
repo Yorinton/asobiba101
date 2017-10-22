@@ -68,6 +68,14 @@ class Plan
 		return (int)$this->price;
 	}
 
+    /**
+     * @return String
+     */
+    public function getPlan(): String
+    {
+        return $this->plan;
+    }
+
 	//Capacityクラスに分割
 	private function setCapacity(String $plan,Options $options): int
 	{
@@ -102,7 +110,7 @@ class Plan
 		return strpos($this->plan,'2時間') || strpos($this->plan,'3時間');
 	}
 
-	public function getAcceptableUtilizationTime():int
+	public function getAcceptableMaxTime():int
 	{
 	    if(!$this->hasShortTimePlan()) {
             return (int)$this->endTimeSet[$this->plan] - $this->startTimeSet[$this->plan];
@@ -114,15 +122,15 @@ class Plan
 	        return 3;
         }
 	}
-	public function getAcceptableUtilizationTimeDependentOptions(Options $options): int
+	public function getAcceptableMaxTimeDependentOptions(Options $options): int
     {
         if($options->hasMidnightOption()){
-            return $this->getAcceptableUtilizationTime() + 2;
+            return $this->getAcceptableMaxTime() + 2;
         }
         if($options->hasStayOption()){
-            return $this->getAcceptableUtilizationTime() + 11;
+            return $this->getAcceptableMaxTime() + 11;
         }
-        return $this->getAcceptableUtilizationTime();
+        return $this->getAcceptableMaxTime();
     }
 
     private function isAcceptablePlanDependentOptions(String $plan,Options $options)

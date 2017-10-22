@@ -6,6 +6,8 @@ namespace Asobiba\Domain\Models\Reservation;
 //リクエストに依存しないように変更
 class Reservation
 {
+    /** @var  ReservationId */
+    private $id;
 
 	/** @var Options */
 	private $options;
@@ -32,14 +34,11 @@ class Reservation
 		int $end_time,
 		string $question = null
 	){
+	    $this->id = new ReservationId();
 		$this->options = new Options($options);
 		$this->plan = new Plan($plan,$this->options);
-
-		if($this->plan->haveToCheckEndtime($this->options) && $end_time < 22){
-		    throw new \InvalidArgumentException('深夜利用or宿泊オプションご希望の場合は、22時までのプランをご利用下さい');
-        }
-
-		$fixed_end_time = $this->editEndTimeDependentOption($end_time);
+        $this->canSelectMidnightOrStayOption($end_time);
+		$fixed_end_time = $this->editEndTimeWhenMidnightOrStayOption($end_time);
 		$this->dateOfUse = new DateOfUse($date,$start_time,$fixed_end_time);
 		$this->isAcceptableUseTime();
 		$this->number = new Number($number,$this->plan);
@@ -47,17 +46,96 @@ class Reservation
 	}
 
 
+    /**
+     * @return ReservationId
+     */
+    public function getId(): ReservationId
+    {
+        return $this->id;
+    }
+
+    /**
+     * get total price of this reservation
+     *
+     * @return int
+     */
 	public function totalPrice(): int
 	{
 		return $this->options->totalOptionPrice() + $this->plan->getBasePrice();
 	}
 
-	public function Capacity(): int
+
+    /**
+     * get price of plan of this reservation
+     *
+     * @return int
+     */
+	public function priceOfPlan(): int
 	{
-		return $this->plan->getCapacity();
+		return $this->plan->getBasePrice();
 	}
 
-	private function editEndTimeDependentOption(int $end_time): int
+    /**
+     * get options and price set of this reservation.
+     *
+     * @return array
+     */
+    public function optionsAndPrice(): array
+    {
+        return $this->options->getSelectedOptionSet();
+    }
+
+    /**
+     * get plan name.
+     *
+     * @return string
+     */
+    public function planName(): string
+    {
+        return $this->plan->getPlan();
+    }
+
+    /**
+     * get question of this reservation
+     *
+     * @return string
+     */
+    public function Question(): string
+    {
+        return $this->question->getQuestion();
+    }
+
+
+    /**
+     * get DateOfUse instance
+     *
+     * @return DateOfUse
+     */
+    public function getDateOfUse(): DateOfUse
+    {
+        return $this->dateOfUse;
+    }
+
+
+    /**
+     * check if this reservation has question
+     *
+     * @return bool
+     */
+    public function hasQuestion(): bool
+    {
+        return $this->question->isQuestion();
+    }
+
+
+    /**
+     * edit end_time if this reservation have midnight option or stay option
+     *
+     * @param int $end_time
+     *
+     * @return int
+     */
+	private function editEndTimeWhenMidnightOrStayOption(int $end_time): int
     {
         if($this->options->hasMidnightOption()){
             return 24;
@@ -68,46 +146,58 @@ class Reservation
         return $end_time;
     }
 
-	public function Question(): string
+
+    /**
+     *
+     * check if the time that user set is acceptable
+     *
+     * @return bool
+     *
+     */
+	private function isAcceptableUseTime():bool
 	{
-		return $this->question->getQuestion();
-	}
-
-	public function hasQuestion(): bool
-	{
-		return $this->question->isQuestion();
-	}
-
-
-
-	public function isAcceptableUseTime():bool
-	{
-		if($this->hasShortTimePlan() && !$this->dateOfUse->notCleaningTime()){
+		if($this->hasShortTimePlan() && $this->isCleaningTime()){
 			throw new \InvalidArgumentException('2or3時間パックの場合16時~17時以外で指定して下さい');
 		}
 		if(!$this->isAcceptableStartTime() || !$this->isAcceptableEndTime()){
 			throw new \InvalidArgumentException('開始時間又は終了時間が適切ではありません');
 		}
-		if(!$this->isAcceptableUtilizationTime()){
+		if(!$this->isAcceptableMaxTime()){
 			throw new \InvalidArgumentException('プランで指定された利用時間をオーバーしています');
 		}
 		return true;
 	}
 
-	private function isAcceptableUtilizationTime():bool
+
+    /**
+     * check if the max time is acceptable
+     *
+     * @return bool
+     */
+	private function isAcceptableMaxTime():bool
 	{
 	    if($this->options->hasStayOption()){
-            return $this->dateOfUse->getEndTime() + 24 - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableUtilizationTimeDependentOptions($this->options);
+            return $this->dateOfUse->getEndTime() + 24 - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableMaxTimeDependentOptions($this->options);
         }
-		return $this->dateOfUse->getEndTime() - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableUtilizationTimeDependentOptions($this->options);
+		return $this->dateOfUse->getEndTime() - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableMaxTimeDependentOptions($this->options);
 	}
 
+
+    /**
+     * check if the start_time is acceptable
+     *
+     * @return bool
+     */
 	private function isAcceptableStartTime():bool
 	{
 		return $this->dateOfUse->getStartTime() >= $this->plan->getAcceptableStartTime();
 	}
 
-
+    /**
+     * check if the end_time is acceptable
+     *
+     * @return bool
+     */
 	private function isAcceptableEndTime():bool
 	{
 	    if($this->options->hasMidnightOption()){
@@ -120,50 +210,41 @@ class Reservation
 	}
 
 
+    /**
+     * check if this reservation has Short time plan (2 hours or 3 hours)
+     *
+     * @return bool
+     */
 	private function hasShortTimePlan():bool
 	{
 		return $this->plan->hasShortTimePlan();
 	}
 
-    /**
-     * @return Options
-     */
-    public function getOptions(): Options
-    {
-        return $this->options;
-    }
 
     /**
-     * @return Plan
+     * check if the use time include cleaning time
+     *
+     * @return bool
      */
-    public function getPlan(): Plan
+    private function isCleaningTime()
     {
-        return $this->plan;
+        return !$this->dateOfUse->notCleaningTime();
     }
 
-    /**
-     * @return Number
-     */
-    public function getNumber(): Number
-    {
-        return $this->number;
-    }
 
     /**
-     * @return DateOfUse
+     * check if the user can select midnight option or stay option dependent end_time
+     *
+     * @param $end_time
      */
-    public function getDateOfUse(): DateOfUse
+	private function canSelectMidnightOrStayOption($end_time)
     {
-        return $this->dateOfUse;
+        if($this->plan->haveToCheckEndtime($this->options) && $end_time < 22){
+            throw new \InvalidArgumentException('深夜利用or宿泊オプションご希望の場合は、22時までのプランをご利用下さい');
+        }
     }
 
-    /**
-     * @return Question
-     */
-    public function getQuestion(): Question
-    {
-        return $this->question;
-    }
+
 
 }
 

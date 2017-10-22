@@ -47,6 +47,13 @@ class Options
 		return (int)$this->totalPrice;
 	}
 
+	public function getSelectedOptionSet(): array
+    {
+        return array_filter($this->optionSet,function($k){
+            return in_array($k,$this->options,true);
+        },ARRAY_FILTER_USE_KEY);
+    }
+
 	public function hasLargeGroupOption(): bool
 	{
 		return in_array('大人数レイアウト', $this->options, true);
