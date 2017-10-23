@@ -49,9 +49,7 @@ class Options
 
 	public function getSelectedOptionSet(): array
     {
-        return array_filter($this->optionSet,function($k){
-            return in_array($k,$this->options,true);
-        },ARRAY_FILTER_USE_KEY);
+    	return array_intersect_key($this->optionSet,array_flip($this->options));
     }
 
 	public function hasLargeGroupOption(): bool
