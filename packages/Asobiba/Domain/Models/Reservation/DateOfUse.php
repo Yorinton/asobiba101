@@ -33,7 +33,7 @@ class DateOfUse
 		return true;
 	}
 
-	public function getDateOfUse(): string
+	public function getDate(): string
 	{
 		return $this->date;
 	}

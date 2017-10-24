@@ -24,7 +24,18 @@ class Reservation
 	/** @var Question */
     private $question;
 
-	// public function __construct(Array $options,)
+    /** @var Status */
+    private $status;
+    /**
+     * Reservation constructor.
+     * @param array $options
+     * @param string $plan
+     * @param int $number
+     * @param string $date
+     * @param int $start_time
+     * @param int $end_time
+     * @param string|null $question
+     */
 	public function __construct(
 		array $options,
 		string $plan,
@@ -43,6 +54,11 @@ class Reservation
 		$this->isAcceptableUseTime();
 		$this->number = new Number($number,$this->plan);
 		$this->question = new Question($question);
+		if($this->hasQuestion()) {
+            $this->status = new Status('Contact');
+        }else{
+            $this->status = new Status('Confirmation');
+        }
 	}
 
 
@@ -244,6 +260,22 @@ class Reservation
         }
     }
 
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status->getStatus();
+    }
+
+    /*
+     * change status to confirmation from contact
+     */
+    public function confirmReservation()
+    {
+        $this->status = $this->status->toConfirmation();
+//
+    }
 
 
 }
