@@ -12,6 +12,7 @@ final class Status
         'AfterPayment' => 'AfterPayment',
         'BeforeUse' => 'BeforeUse',
         'Used' => 'Used',
+        'Canceled' => 'Canceled',
     ];
 
     private $status;
@@ -19,7 +20,7 @@ final class Status
     public function __construct($key)
     {
         if (!static::isValidValue($key)) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException('定義されていないステータス');
         }
 
         $this->status = self::ENUM[$key];
@@ -31,11 +32,6 @@ final class Status
     }
 
     public function __toString()
-    {
-        return $this->status;
-    }
-
-    public function getStatus()
     {
         return $this->status;
     }
@@ -57,6 +53,44 @@ final class Status
         }
         return new self('Confirmation');
     }
+
+    public function toBeforePayment()
+    {
+        if($this->status !== 'Confirmation'){
+            throw new \InvalidArgumentException('このステータスには変更出来ません');
+        }
+        return new self('BeforePayment');
+    }
+
+    public function toAfterPayment()
+    {
+        if($this->status !== 'BeforePayment'){
+            throw new \InvalidArgumentException('このステータスには変更出来ません');
+        }
+        return new self('AfterPayment');
+    }
+
+    public function toBeforeUse()
+    {
+        if($this->status !== 'AfterPayment'){
+            throw new \InvalidArgumentException('このステータスには変更出来ません');
+        }
+        return new self('BeforeUse');
+    }
+
+    public function toUsed()
+    {
+        if($this->status !== 'BeforeUse'){
+            throw new \InvalidArgumentException('このステータスには変更出来ません');
+        }
+        return new self('Used');
+    }
+
+    public function toCanceled()
+    {
+        return new self('Canceled');
+    }
+
 }
 
 

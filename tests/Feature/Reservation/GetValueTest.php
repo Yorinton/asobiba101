@@ -82,7 +82,7 @@ class GetValueTest extends TestCase
     /**
      * Get status of this reservation.
      */
-    public function testGetStatus()
+    public function testChangeStatus()
     {
         $request = makeCorrectRequest();
 
@@ -96,12 +96,26 @@ class GetValueTest extends TestCase
             $request->question
         );
         $this->assertEquals('Contact',$reservation->getStatus());
-        $reservation->confirmReservation();
+        $reservation->changeStatus('Confirmation');
         $this->assertEquals('Confirmation',$reservation->getStatus());
-//        $this->assertEquals(3,$reservation->sentProcedureInfo());
-//        $this->assertEquals(4,$reservation->confirmPayment());
-//        $this->assertEquals(5,$reservation->sentAccess());
-//        $this->assertEquals(6,$reservation->used());
+        $reservation->changeStatus('BeforePayment');
+        $this->assertEquals('BeforePayment',$reservation->getStatus());
+        $reservation->changeStatus('AfterPayment');
+        $this->assertEquals('AfterPayment',$reservation->getStatus());
+        $reservation->changeStatus('BeforeUse');
+        $this->assertEquals('BeforeUse',$reservation->getStatus());
+        $reservation->changeStatus('Used');
+        $this->assertEquals('Used',$reservation->getStatus());
+        $reservation->changeStatus('Canceled');
+        $this->assertEquals('Canceled',$reservation->getStatus());
+
+        try {
+            $reservation->changeStatus('Confirmation');
+            $this->fail('例外無し');
+        }catch(\InvalidArgumentException $e){
+            $this->assertEquals('このステータスには変更出来ません',$e->getMessage());
+        }
+
     }
 
 }

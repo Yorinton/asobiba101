@@ -265,17 +265,21 @@ class Reservation
      */
     public function getStatus(): string
     {
-        return $this->status->getStatus();
+        return (string)$this->status;//__toStringメソッドが定義されているため
     }
 
-    /*
-     * change status to confirmation from contact
+
+    /**
+     * change status
+     * @param string $status
      */
-    public function confirmReservation()
+    public function changeStatus(string $status)
     {
-        $this->status = $this->status->toConfirmation();
-//
+        $method = 'to'.$status;
+        $this->status = $this->status->$method();
     }
+
+
 
 
 }
