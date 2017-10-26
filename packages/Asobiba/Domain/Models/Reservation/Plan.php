@@ -4,12 +4,16 @@ namespace Asobiba\Domain\Models\Reservation;
 
 class Plan
 {
+    /** @var String  */
 	private $plan;
 
+    /** @var int  */
 	private $price;
 
+	/** @var int  */
 	private $capacity;
 
+	/** @var array  */
 	private $priceSet = [
 
 		'【非商用】基本プラン(平日)' => 19500,
@@ -23,6 +27,7 @@ class Plan
 		'【商用】2時間パック' => 17000,
 	];
 
+	/** @var array  */
 	private $startTimeSet = [
 
 		'【非商用】基本プラン(平日)' => 11,
@@ -36,6 +41,7 @@ class Plan
 		'【商用】2時間パック' => 11,
 	];
 
+	/** @var array  */
 	private $endTimeSet = [
 
 		'【非商用】基本プラン(平日)' => 22,
