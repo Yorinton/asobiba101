@@ -90,6 +90,7 @@ class Reservation
 		return $this->plan->getBasePrice();
 	}
 
+
     /**
      * get options and price set of this reservation.
      *
