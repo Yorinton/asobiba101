@@ -15,6 +15,9 @@ class Reservation
 	/** @var Plan */
     private $plan;
 
+    /** @var Capacity */
+    private $capacity;
+
 	/** @var Number */
     private $number;
 
@@ -46,12 +49,11 @@ class Reservation
 		string $question = null
 	){
 	    $this->id = new ReservationId();
-		$this->options = new Options($options);
-		$this->plan = new Plan($plan,$this->options);
-		$fixed_end_time = $this->optimazeEndTimeByOptions($end_time);
-		$this->dateOfUse = new DateOfUse($date,$start_time,$fixed_end_time);
-		$this->isAcceptableUseTime();
-		$this->number = new Number($number,$this->plan);
+        $this->plan = new Plan($plan);
+        $this->options = new Options($options,$this->plan,$end_time);
+		$this->dateOfUse = new DateOfUse($date,$start_time,$end_time,$this->plan,$this->options);
+		$this->capacity = new Capacity($this->plan,$this->options);
+		$this->number = new Number($number,$this->capacity);
 		$this->question = new Question($question);
 		if($this->hasQuestion()) {
             $this->status = new Status('Contact');
@@ -74,9 +76,9 @@ class Reservation
      *
      * @return int
      */
-	public function totalPrice(): int
+	public function getTotalPrice(): int
 	{
-		return $this->options->totalOptionPrice() + $this->plan->getBasePrice();
+		return $this->options->getTotalPrice() + $this->plan->getPrice();
 	}
 
 
@@ -85,9 +87,9 @@ class Reservation
      *
      * @return int
      */
-	public function priceOfPlan(): int
+	public function getPriceOfPlan(): int
 	{
-		return $this->plan->getBasePrice();
+		return $this->plan->getPrice();
 	}
 
 
@@ -96,9 +98,9 @@ class Reservation
      *
      * @return array
      */
-    public function optionsAndPrice(): array
+    public function getOptionAndPriceSet(): array
     {
-        return $this->options->getSelectedOptionSet();
+        return $this->options->getOptionAndPriceSet();
     }
 
     /**
@@ -106,9 +108,20 @@ class Reservation
      *
      * @return string
      */
-    public function planName(): string
+    public function getPlanName(): string
     {
         return $this->plan->getPlan();
+    }
+
+
+    /**
+     * get number of guests.
+     *
+     * @return string
+     */
+    public function getNumber(): int
+    {
+        return $this->number->getNumber();
     }
 
     /**
@@ -116,11 +129,10 @@ class Reservation
      *
      * @return string
      */
-    public function question(): string
+    public function getQuestion(): string
     {
         return $this->question->getQuestion();
     }
-
 
     /**
      * @return string
@@ -141,16 +153,36 @@ class Reservation
         $this->status = $this->status->$method();
     }
 
+    /**
+     * get Date
+     *
+     * @return string
+     */
+    public function getDate(): string
+    {
+        return $this->dateOfUse->getDate();
+    }
 
     /**
-     * get DateOfUse instance
+     * get StartTime
      *
-     * @return DateOfUse
+     * @return int
      */
-    public function getDateOfUse(): DateOfUse
+    public function getStartTime(): int
     {
-        return $this->dateOfUse;
+        return $this->dateOfUse->getStartTime();
     }
+
+    /**
+     * get EndTime
+     *
+     * @return int
+     */
+    public function getEndTime(): int
+    {
+        return $this->dateOfUse->getEndTime();
+    }
+
 
 
     /**
@@ -161,131 +193,6 @@ class Reservation
     public function hasQuestion(): bool
     {
         return $this->question->isQuestion();
-    }
-
-
-    /**
-     * edit end_time if this reservation have midnight option or stay option
-     *
-     * @param int $end_time
-     *
-     * @return int
-     */
-    private function optimazeEndTimeByOptions(int $end_time): int
-    {
-        //check if the selected plan can have midnight or stay option
-        $this->canSelectExtendTimeOption($end_time);
-
-        if($this->options->hasMidnightOption()){
-            return 24;
-        }
-        if($this->options->hasStayOption()){
-            return 9;
-        }
-        return $end_time;
-    }
-
-
-    /**
-     * check if the user can select midnight option or stay option dependent end_time
-     *
-     * @param $end_time
-     */
-    private function canSelectExtendTimeOption($end_time)
-    {
-        if($this->plan->haveToCheckEndtime($this->options) && $end_time < 22){
-            throw new \InvalidArgumentException('深夜利用or宿泊オプションご希望の場合は、22時までのプランをご利用下さい');
-        }
-    }
-
-
-    /**
-     *
-     * check if the time that user set is acceptable
-     *
-     * @return bool
-     *
-     */
-	private function isAcceptableUseTime():bool
-	{
-		if($this->hasShortTimePlan() && $this->isCleaningTime()){
-			throw new \InvalidArgumentException('2or3時間パックの場合16時~17時以外で指定して下さい');
-		}
-		if(!$this->isAcceptableStartTime() || !$this->isAcceptableEndTime()){
-			throw new \InvalidArgumentException('開始時間又は終了時間が適切ではありません');
-		}
-		if(!$this->isAcceptableMaxTime()){
-			throw new \InvalidArgumentException('プランで指定された利用時間をオーバーしています');
-		}
-		return true;
-	}
-
-
-    /**
-     * check if the max time is acceptable
-     *
-     * @return bool
-     */
-	private function isAcceptableMaxTime():bool
-	{
-	    if($this->options->hasStayOption()){
-            return $this->dateOfUse->getEndTime() + 24 - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableMaxTimeDependentOptions($this->options);
-        }
-		return $this->dateOfUse->getEndTime() - $this->dateOfUse->getStartTime() <= $this->plan->getAcceptableMaxTimeDependentOptions($this->options);
-	}
-
-
-    /**
-     * check if the start_time is acceptable
-     *
-     * @return bool
-     */
-	private function isAcceptableStartTime():bool
-	{
-		return $this->dateOfUse->getStartTime() >= $this->plan->getAcceptableStartTime();
-	}
-
-    /**
-     * check if the end_time is acceptable
-     *
-     * @return bool
-     */
-	private function isAcceptableEndTime():bool
-	{
-	    if($this->options->hasMidnightOption()){
-
-	        return $this->dateOfUse->getEndTime() === 24;
-
-        }
-        if($this->options->hasStayOption()){
-
-	        return $this->dateOfUse->getEndTime() === 9;
-
-        }
-
-        return $this->dateOfUse->getEndTime() <= $this->plan->getAcceptableEndTime();
-	}
-
-
-    /**
-     * check if this reservation has Short time plan (2 hours or 3 hours)
-     *
-     * @return bool
-     */
-	private function hasShortTimePlan():bool
-	{
-		return $this->plan->hasShortTimePlan();
-	}
-
-
-    /**
-     * check if the use time include cleaning time
-     *
-     * @return bool
-     */
-    private function isCleaningTime()
-    {
-        return !$this->dateOfUse->notCleaningTime();
     }
 
 

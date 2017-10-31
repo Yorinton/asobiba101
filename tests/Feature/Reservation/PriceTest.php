@@ -30,7 +30,7 @@ class PriceTest extends TestCase
             $request->end_time,
             $request->question
         );
-        $this->assertEquals($reservation->totalPrice(),28500);
+        $this->assertEquals($reservation->getTotalPrice(),28500);
     }
 
     /**
@@ -53,7 +53,7 @@ class PriceTest extends TestCase
             $request->question
         );
 
-        $options = $reservation->optionsAndPrice();
+        $options = $reservation->getOptionAndPriceSet();
 
         $this->assertEquals($options,['ゴミ処理' => 1500,'カセットコンロ' => 1500,'宿泊(1〜3名様)' => 6000]);
 
@@ -78,7 +78,7 @@ class PriceTest extends TestCase
             $request->question
         );
 
-        $this->assertEquals(19500,$reservation->priceOfPlan());
+        $this->assertEquals(19500,$reservation->getPriceOfPlan());
     }
 
 }

@@ -30,7 +30,7 @@ class GetValueTest extends TestCase
             $request->end_time,
             $request->question
         );
-        $this->assertEquals('【非商用】基本プラン(平日)',$reservation->planName());
+        $this->assertEquals('【非商用】基本プラン(平日)',$reservation->getPlanName());
     }
 
     /**
@@ -49,11 +49,11 @@ class GetValueTest extends TestCase
             $request->end_time,
             $request->question
         );
-        $this->assertEquals('2017-11-26',$reservation->getDateOfUse()->getDate());
-        $this->assertEquals(11,$reservation->getDateOfUse()->getStartTime());
-        $this->assertEquals(9,$reservation->getDateOfUse()->getEndTime());
+        $this->assertEquals('2017-11-26',$reservation->getDate());
+        $this->assertEquals(11,$reservation->getStartTime());
+        $this->assertEquals(9,$reservation->getEndTime());
 
-        $request->options[2] = '';//宿泊オプションを削除
+        array_splice($request->options, 2, 1);//宿泊オプションを削除
         $reservation = new Reservation(
             $request->options,
             $request->plan,
@@ -63,7 +63,7 @@ class GetValueTest extends TestCase
             $request->end_time,
             $request->question
         );
-        $this->assertEquals(22,$reservation->getDateOfUse()->getEndTime());
+        $this->assertEquals(22,$reservation->getEndTime());
 
         $request->options[2] = '深夜利用';//宿泊オプションを深夜利用に変更
         $reservation = new Reservation(
@@ -75,7 +75,7 @@ class GetValueTest extends TestCase
             $request->end_time,
             $request->question
         );
-        $this->assertEquals(24,$reservation->getDateOfUse()->getEndTime());
+        $this->assertEquals(24,$reservation->getEndTime());
 
     }
 
@@ -115,6 +115,21 @@ class GetValueTest extends TestCase
         }catch(\InvalidArgumentException $e){
             $this->assertEquals('このステータスには変更出来ません',$e->getMessage());
         }
+
+    }
+    public function testGetNumber()
+    {
+        $request = makeCorrectRequest();
+        $reservation = new Reservation(
+            $request->options,
+            $request->plan,
+            $request->number,
+            $request->date,
+            $request->start_time,
+            $request->end_time,
+            $request->question
+        );
+        $this->assertEquals(10,$reservation->getNumber());
 
     }
 

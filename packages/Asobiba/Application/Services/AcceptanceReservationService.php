@@ -7,7 +7,7 @@ use Asobiba\Domain\Models\Reservation\Reservation;
 use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
 use Infrastructure\Notification\ReservationMailNotification;
 
-class ReservationService
+class AcceptanceReservationService
 {
 
     //カスタマーからのリクエストを受け取ってDBに保存 + 自動返信メール送信

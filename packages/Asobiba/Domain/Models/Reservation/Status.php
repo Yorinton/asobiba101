@@ -2,10 +2,11 @@
 
 namespace Asobiba\Domain\Models\Reservation;
 
+use Asobiba\Domain\Models\Enum;
 
-final class Status
+final class Status extends Enum
 {
-    const ENUM = [
+    protected const ENUM = [
         'Contact' => 'Contact',
         'Confirmation' => 'Confirmation',
         'BeforePayment' => 'BeforePayment',
@@ -15,40 +16,10 @@ final class Status
         'Canceled' => 'Canceled',
     ];
 
-    private $status;
-
-    public function __construct($key)
-    {
-        if (!static::isValidValue($key)) {
-            throw new \InvalidArgumentException('定義されていないステータス');
-        }
-
-        $this->status = self::ENUM[$key];
-    }
-
-    public static function isValidValue($key)
-    {
-        return array_key_exists($key, self::ENUM);
-    }
-
-    public function __toString()
-    {
-        return $this->status;
-    }
-
-    public static function __callStatic($method, array $args)
-    {
-        return new self($method);
-    }
-
-    public function __set($key, $value)
-    {
-        throw new \BadMethodCallException('All setter is forbbiden');
-    }
 
     public function toConfirmation()
     {
-        if($this->status !== 'Contact'){
+        if($this->value !== 'Contact'){
             throw new \InvalidArgumentException('このステータスには変更出来ません');
         }
         return new self('Confirmation');
@@ -56,7 +27,7 @@ final class Status
 
     public function toBeforePayment()
     {
-        if($this->status !== 'Confirmation'){
+        if($this->value !== 'Confirmation'){
             throw new \InvalidArgumentException('このステータスには変更出来ません');
         }
         return new self('BeforePayment');
@@ -64,7 +35,7 @@ final class Status
 
     public function toAfterPayment()
     {
-        if($this->status !== 'BeforePayment'){
+        if($this->value !== 'BeforePayment'){
             throw new \InvalidArgumentException('このステータスには変更出来ません');
         }
         return new self('AfterPayment');
@@ -72,7 +43,7 @@ final class Status
 
     public function toBeforeUse()
     {
-        if($this->status !== 'AfterPayment'){
+        if($this->value !== 'AfterPayment'){
             throw new \InvalidArgumentException('このステータスには変更出来ません');
         }
         return new self('BeforeUse');
@@ -80,7 +51,7 @@ final class Status
 
     public function toUsed()
     {
-        if($this->status !== 'BeforeUse'){
+        if($this->value !== 'BeforeUse'){
             throw new \InvalidArgumentException('このステータスには変更出来ません');
         }
         return new self('Used');

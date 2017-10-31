@@ -31,7 +31,7 @@ class QuestionTest extends TestCase
             $request->question
         ); 
 
-        $this->assertEquals('途中退出ありですか？',$reservation->question());
+        $this->assertEquals('途中退出ありですか？',$reservation->getQuestion());
     }
 
     public function testCheckHasQuestion()

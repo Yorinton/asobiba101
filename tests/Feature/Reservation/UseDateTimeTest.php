@@ -41,8 +41,7 @@ class UseDateTimeTest extends TestCase
     {
         $request = makeCorrectRequest();
         $request->end_time = '23';
-        $request->options[2] = '';
-
+        array_splice($request->options,2,1);
         try{
             $reservation = new Reservation(
                 $request->options,
@@ -53,10 +52,9 @@ class UseDateTimeTest extends TestCase
                 $request->end_time,
                 $request->question
             );
-            $this->assertTrue(true);
             $this->fail('例外発生無し');
         }catch(\Exception $e){
-            $this->assertEquals('開始時間又は終了時間が適切ではありません',$e->getMessage());
+            $this->assertEquals('不正な開始時刻又は終了時刻が入力されています',$e->getMessage());
         }
     }
 
@@ -66,8 +64,7 @@ class UseDateTimeTest extends TestCase
         $request->plan = '【商用】3時間パック';
         $request->start_time = 15;
         $request->end_time = 18;
-        $request->options[2] = '';
-
+        array_splice($request->options,2,1);
         try{
             $reservation = new Reservation(
                 $request->options,
@@ -78,7 +75,6 @@ class UseDateTimeTest extends TestCase
                 $request->end_time,
                 $request->question
             );
-            $this->assertTrue(true);
             $this->fail('例外発生無し');
         }catch(\Exception $e){
             $this->assertEquals('2or3時間パックの場合16時~17時以外で指定して下さい',$e->getMessage());
@@ -102,7 +98,6 @@ class UseDateTimeTest extends TestCase
                 $request->end_time,
                 $request->question
             );
-            $this->assertTrue(true);
             $this->fail('例外発生無し');
         }catch(\Exception $e){
             $this->assertEquals('プランで指定された利用時間をオーバーしています',$e->getMessage());
@@ -125,7 +120,7 @@ class UseDateTimeTest extends TestCase
                 $request->end_time,
                 $request->question
             );
-            $this->assertEquals($reservation->getDateOfUse()->getEndTime(), 9);
+            $this->assertEquals($reservation->getEndTime(), 9);
         } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
@@ -142,13 +137,13 @@ class UseDateTimeTest extends TestCase
                 $request->end_time,
                 $request->question
             );
-            $this->assertEquals($reservation->getDateOfUse()->getEndTime(), 24);
+            $this->assertEquals($reservation->getEndTime(), 24);
         } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
     }
 
-    public function notAcceptDayTimePlanAndMidnightOrStayOptions()
+    public function testNotAcceptDayTimePlanAndMidnightOrStayOptions()
     {
 
         $request = makeCorrectRequest();
@@ -165,11 +160,11 @@ class UseDateTimeTest extends TestCase
             );
             $this->fail('例外無し');
         } catch (\Exception $e) {
-            $this->assertEquals('深夜利用or宿泊オプションご希望の場合は「基本プラン」か「夜5時間パック」、もしくは夜22時まで利用するプランをご利用下さい', $e->getMessage());
+            $this->assertEquals('お昼プランの場合、深夜利用・宿泊オプションは利用出来ません', $e->getMessage());
         }
     }
 
-    public function notAcceptedEndTimeAndMidnightOrStayOptions()
+    public function testNotAcceptedEndTimeAndMidnightOrStayOptions()
     {
         $request = makeOtherRequest();
         $request->start_time = 17;
