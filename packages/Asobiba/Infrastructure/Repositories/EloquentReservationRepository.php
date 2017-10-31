@@ -23,10 +23,10 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
         $eloquentReservation->save();
 
         //Reservationと関連するオプションの永続化
-        if(!$reservation->optionsAndPrice()) {
+        if(!$reservation->getOptionAndPriceSet()) {
             return;
         }
-        foreach ($reservation->optionsAndPrice() as $name => $price) {
+        foreach ($reservation->getOptionAndPriceSet() as $name => $price) {
             $option = new EloquentOption();
             $option->name = $name;
             $option->price = $price;

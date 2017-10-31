@@ -41,8 +41,7 @@ class UseDateTimeTest extends TestCase
     {
         $request = makeCorrectRequest();
         $request->end_time = '23';
-        $request->options[2] = '';
-
+        array_splice($request->options,2,1);
         try{
             $reservation = new Reservation(
                 $request->options,
@@ -65,8 +64,7 @@ class UseDateTimeTest extends TestCase
         $request->plan = '【商用】3時間パック';
         $request->start_time = 15;
         $request->end_time = 18;
-        $request->options[2] = '';
-
+        array_splice($request->options,2,1);
         try{
             $reservation = new Reservation(
                 $request->options,

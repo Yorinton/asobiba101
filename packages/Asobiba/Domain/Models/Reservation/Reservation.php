@@ -78,7 +78,7 @@ class Reservation
      */
 	public function getTotalPrice(): int
 	{
-		return $this->options->totalOptionPrice() + $this->plan->getPrice();
+		return $this->options->getTotalPrice() + $this->plan->getPrice();
 	}
 
 
@@ -98,9 +98,9 @@ class Reservation
      *
      * @return array
      */
-    public function optionsAndPrice(): array
+    public function getOptionAndPriceSet(): array
     {
-        return $this->options->getSelectedOptionSet();
+        return $this->options->getOptionAndPriceSet();
     }
 
     /**
@@ -113,10 +113,17 @@ class Reservation
         return $this->plan->getPlan();
     }
 
+
+    /**
+     * get number of guests.
+     *
+     * @return string
+     */
     public function getNumber(): int
     {
         return $this->number->getNumber();
     }
+
     /**
      * get question of this reservation
      *
@@ -126,7 +133,6 @@ class Reservation
     {
         return $this->question->getQuestion();
     }
-
 
     /**
      * @return string

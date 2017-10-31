@@ -53,7 +53,7 @@ class PriceTest extends TestCase
             $request->question
         );
 
-        $options = $reservation->optionsAndPrice();
+        $options = $reservation->getOptionAndPriceSet();
 
         $this->assertEquals($options,['ゴミ処理' => 1500,'カセットコンロ' => 1500,'宿泊(1〜3名様)' => 6000]);
 

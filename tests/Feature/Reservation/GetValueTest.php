@@ -53,7 +53,7 @@ class GetValueTest extends TestCase
         $this->assertEquals(11,$reservation->getStartTime());
         $this->assertEquals(9,$reservation->getEndTime());
 
-        $request->options[2] = '';//宿泊オプションを削除
+        array_splice($request->options, 2, 1);//宿泊オプションを削除
         $reservation = new Reservation(
             $request->options,
             $request->plan,
