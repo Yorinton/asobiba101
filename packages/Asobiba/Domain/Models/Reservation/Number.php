@@ -7,26 +7,26 @@ class Number
 
 	private $number;
 
-	public function __construct(Int $number,Plan $plan)
+	public function __construct(Int $number,Capacity $capacity)
 	{
-		if(!$this->isAcceptableNumber($number,$plan)){
+		if(!$this->isAcceptableNumber($number,$capacity)){
 			throw new \InvalidArgumentException('適切な利用人数を設定して下さい');
 		}
 		$this->number = $number;
 	}
 
-	public function isAcceptableNumber(Int $number,Plan $plan): bool
+	public function isAcceptableNumber(Int $number,Capacity $capacity): bool
 	{
-		if ($number > $plan->getCapacity()) {
-			return false;
-		}
+	    if($number > $capacity->getCapacity()){
+            return false;
+        }
 		return true;
 	}
 
     /**
      * @return Int
      */
-    public function getNumberOfGuests(): int
+    public function getNumber(): int
     {
         return $this->number;
     }

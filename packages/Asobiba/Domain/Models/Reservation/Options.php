@@ -33,9 +33,15 @@ class Options
 		'付けない' => 0,
 	];
 
-	public function __construct(array $options)
+	public function __construct(array $options,Plan $plan,$end_time)
 	{
-		$this->options = $options;
+        $this->options = $options;
+	    if(!$this->canSelectExtendTimeOptionOnDayTimePlan($plan)){
+	        throw new \InvalidArgumentException('お昼プランの場合、深夜利用・宿泊オプションは利用出来ません');
+        }
+        if(!$this->canSelectExtendTimeOptionOnShortTimePlan($plan,$end_time)){
+            throw new \InvalidArgumentException('深夜利用or宿泊オプションご希望の場合は、22時までのプランをご利用下さい');
+        }
 	}
 
 	//Priceクラスに分割？
@@ -68,6 +74,22 @@ class Options
 	{
 		return in_array('深夜利用', $this->options, true);		
 	}
+
+	public function canSelectExtendTimeOptionOnShortTimePlan($plan,$end_time): bool
+    {
+        if($plan->hasShortTimePlan() && ($this->hasStayOption() || $this->hasMidnightOption()) && $end_time !== 22){
+            return false;
+        }
+        return true;
+    }
+
+    public function canSelectExtendTimeOptionOnDayTimePlan($plan): bool
+    {
+        if(($this->hasStayOption() || $this->hasMidnightOption()) && $plan->hasDayTimePlan()){
+            return false;
+        }
+        return true;
+    }
 
 }
 

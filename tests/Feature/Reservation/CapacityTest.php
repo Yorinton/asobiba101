@@ -102,8 +102,7 @@ class CapacityTest extends TestCase
             $this->assertTrue(true);
         }catch(\InvalidArgumentException $e){
             $this->fail($e->getMessage());
-        }       
-
+        }
     }
 
     public function testCapacityOkBusinessPlan()

@@ -11,12 +11,11 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
 {
     public function add(Reservation $reservation)
     {
-        return true;
         //Reservationの永続化
         $eloquentReservation = new EloquentReservation();
         $eloquentReservation->id = $reservation->getId();
-        $eloquentReservation->plan = $reservation->planName();
-        $eloquentReservation->price = $reservation->totalPrice();
+        $eloquentReservation->plan = $reservation->getPlanName();
+        $eloquentReservation->price = $reservation->getTotalPrice();
 
         //以下EloquentReservationを通してDBにreservationの値を登録していく
         // ・・・
