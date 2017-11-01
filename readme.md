@@ -1,53 +1,130 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+## 業務ルール
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+<h3>予約内容には以下の項目が含まれる</h3>
+<ul>
+<li>プラン</li>
+<li>オプション(複数可)</li>
+<li>日程</li>
+<li>開始時間</li>
+<li>終了時間</li>
+<li>利用人数</li>
+<li>利用用途(目的)</li>
+<li>質問</li>
+<li>ステータス</li>
+</ul>
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+<h3>プランに関するルール</h3>
+<ul>
+<li>既定のプラン以外は設定出来ない</li>
+</ul>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<h3>オプションに関する基本ルール</h3>
+<ul>
+<li>オプションは複数選択出来る</li>
+<li>既定のオプション以外は設定出来ない</li>
+<li>
+<p>お昼5hプランの場合</p>
+<ul>
+<li>深夜オプション・宿泊オプションは選択出来ない</li>
+</ul>
+</li>
+<li>
+<p>短時間(2or3)時間プランの場合</p>
+<ul>
+<li>
+<p>終了時間が22時で無い場合</p>
+<ul>
+<li>深夜オプション・宿泊オプションは選択出来ない</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+<h3>日程に関する基本ルール</h3>
+<ul>
+<li>
+<p>空いていない場合<p>
+<ul>
+<li>その旨と前後１週間で空いている日程を自動返信する</li>
+</ul>
+</li>
+</ul>
 
-## Learning Laravel
+<h3>開始時間に関する基本ルール</h3>
+<ul>
+<li>最早でも11時から</li>
+<li>
+<p>夜5hプランの場合</p>
+<ul><li>17時から</li></ul>
+</li>
+</ul>
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+<h3>終了時間に関する基本ルール</h3>
+<ul>
+<li>最遅でも22時まで</li>
+<li>
+<p>お昼5hプランの場合</p>
+<ul>
+  <li>16時まで</li>
+</ul>
+</li>
+<li>
+<p>深夜利用オプション選択の場合</p>
+<ul>
+  <li>24時まで</li>
+</ul>
+</li>
+<li>
+<p>宿泊オプション選択の場合</p>
+<ul>
+  <li>翌朝9時まで</li>
+</ul>
+</li>
+</ul>
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+・利用時間帯に関するルール
+　-短(2or3)時間プランの場合
+　・・開始時間が17時以降 or 終了時間が16時まで
+　　　(16時～17時の間は利用不可)
+　・・最大時間が2時間or3時間まで
+
+・利用人数に関する基本ルール
+　-最大11名まで
+　-商用プランの場合・・最大15名まで
+　-大人数オプションの場合・・最大15名まで
+
+・利用用途に関する基本ルール
+　-「アダルト」が入っている場合利用用途に合わない旨自動返信
+
+・質問に関する基本ルール
+　-質問がある場合・・数時間以内に返答する旨を自動返信する
+　-質問が無い場合・・予約内容と入金手続きを自動返信する
+
+
+・ステータスに関する基本ルール
+　-既定のステータス以外にはなれない
+　-一つ前のステータスからしか変更出来ない
+　(Contact -> Used等複数のステータスを飛ばしての変更は不可)
+　-質問がある場合・・最初のステータスは「Contact」
+　-質問が無い場合・・最初のステータスは「Confirmation」
+
+
+## 
+
+
 
 ## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+
 
 ## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
