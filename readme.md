@@ -153,4 +153,4 @@
 </ul>
 
 ## クラス図
-
+<img src="https://github.com/Yorinton/asobiba101/blob/master/packages/Asobiba/ClassDiagram.png?raw=true">
