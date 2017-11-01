@@ -22,7 +22,7 @@ class Capacity
         '【商用】2時間パック' => 15,
     ];
 
-    public function __construct(Plan $plan,Options $options)
+    public function __construct(Plan $plan, Options $options)
     {
         $this->plan = $plan;
         $this->options = $options;
@@ -30,7 +30,7 @@ class Capacity
 
     public function getCapacity()
     {
-        if($this->options->hasLargeGroupOption()){
+        if ($this->options->hasLargeGroupOption()) {
             return 15;
         }
         return self::capacityOfPlanSet[$this->plan->getPlan()];

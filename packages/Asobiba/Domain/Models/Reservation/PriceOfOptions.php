@@ -31,7 +31,7 @@ class PriceOfOptions
     public static function getTotalPrice(array $options): int
     {
         $totalPrice = 0;
-        foreach($options as $option){
+        foreach ($options as $option) {
             $totalPrice += self::priceOptionsSet[$option];
         }
         return (int)$totalPrice;
@@ -39,7 +39,7 @@ class PriceOfOptions
 
     public static function getOptionAndPriceSet(array $options): array
     {
-        return array_intersect_key(self::priceOptionsSet,array_flip($options));
+        return array_intersect_key(self::priceOptionsSet, array_flip($options));
     }
 
 }
