@@ -18,5 +18,3 @@ class ReservationId
         return $this->id;
     }
 }
-
-?>

@@ -9,26 +9,27 @@ class Reservation
     /** @var  ReservationId */
     private $id;
 
-	/** @var Options */
-	private $options;
+    /** @var Options */
+    private $options;
 
-	/** @var Plan */
+    /** @var Plan */
     private $plan;
 
     /** @var Capacity */
     private $capacity;
 
-	/** @var Number */
+    /** @var Number */
     private $number;
 
-	/** @var DateOfUse */
+    /** @var DateOfUse */
     private $dateOfUse;
 
-	/** @var Question */
+    /** @var Question */
     private $question;
 
     /** @var Status */
     private $status;
+
     /**
      * Reservation constructor.
      * @param array $options
@@ -39,29 +40,30 @@ class Reservation
      * @param int $end_time
      * @param string|null $question
      */
-	public function __construct(
-		array $options,
-		string $plan,
-		int $number,
-		string $date,
-		int $start_time,
-		int $end_time,
-		string $question = null
-	){
-	    $this->id = new ReservationId();
+    public function __construct(
+        array $options,
+        string $plan,
+        int $number,
+        string $date,
+        int $start_time,
+        int $end_time,
+        string $question = null
+    )
+    {
+        $this->id = new ReservationId();
         $this->plan = new Plan($plan);
-        $this->options = new Options($options,$this->plan,$end_time);
-		$this->dateOfUse = new DateOfUse($date,$start_time,$end_time,$this->plan,$this->options);
-		$this->capacity = new Capacity($this->plan,$this->options);
-		$this->number = new Number($number,$this->capacity);
-		$this->question = new Question($question);
-		if($this->hasQuestion()) {
+        $this->options = new Options($options, $this->plan, $end_time);
+        $this->dateOfUse = new DateOfUse($date, $start_time, $end_time, $this->plan, $this->options);
+        $this->capacity = new Capacity($this->plan, $this->options);
+        $this->number = new Number($number, $this->capacity);
+        $this->question = new Question($question);
+        if ($this->hasQuestion()) {
             $this->status = new Status('Contact');
-        }else{
+        } else {
             $this->status = new Status('Confirmation');
         }
-	}
-
+    }
+    //引数の型を独自の型にする・・外でインスタンス化する
 
     /**
      * @return ReservationId
@@ -76,10 +78,10 @@ class Reservation
      *
      * @return int
      */
-	public function getTotalPrice(): int
-	{
-		return $this->options->getTotalPrice() + $this->plan->getPrice();
-	}
+    public function getTotalPrice(): int
+    {
+        return $this->options->getTotalPrice() + $this->plan->getPrice();
+    }
 
 
     /**
@@ -87,10 +89,10 @@ class Reservation
      *
      * @return int
      */
-	public function getPriceOfPlan(): int
-	{
-		return $this->plan->getPrice();
-	}
+    public function getPriceOfPlan(): int
+    {
+        return $this->plan->getPrice();
+    }
 
 
     /**
@@ -149,7 +151,7 @@ class Reservation
      */
     public function changeStatus(string $status)
     {
-        $method = 'to'.$status;
+        $method = 'to' . $status;
         $this->status = $this->status->$method();
     }
 
@@ -184,7 +186,6 @@ class Reservation
     }
 
 
-
     /**
      * check if this reservation has question
      *
@@ -198,6 +199,3 @@ class Reservation
 
 }
 
-
-
-?>
