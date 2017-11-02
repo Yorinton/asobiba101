@@ -1,3 +1,9 @@
+## 業務内容など
+
+こちらのスライド参照(業務内容はP7以降)
+<div style="margin-bottom:5px"> <strong> <a href="//www.slideshare.net/ssuser2ff728/yyphp-13" title="YYPHP #13 初めてのコードレビュー" target="_blank">YYPHP #13 初めてのコードレビュー</a> </strong></div>
+
+
 ## 業務ルール
 
 <h3>予約内容には以下の項目が含まれる</h3>
@@ -154,3 +160,4 @@
 
 ## クラス図
 <img src="https://github.com/Yorinton/asobiba101/blob/master/packages/Asobiba/ClassDiagram.png?raw=true">
+
