@@ -11,8 +11,8 @@ class AcceptanceReservationService
 {
 
     //カスタマーからのリクエストを受け取ってDBに保存 + 自動返信メール送信
-	public function reserve(Request $req)
-	{
+    public function reserve(Request $req)
+    {
         $repository = new EloquentReservationRepository();
         $id = $repository->nextIdentity();//実装前
         $reservation = new Reservation(
@@ -28,10 +28,10 @@ class AcceptanceReservationService
         $repository->add($reservation);
 
         $this->sendAutoReply($reservation);
-	}
+    }
 
-	//自動返信メールをカスタマー・マネージャー両方に送信
-	public function sendAutoReply(Reservation $reservation)
+    //自動返信メールをカスタマー・マネージャー両方に送信
+    public function sendAutoReply(Reservation $reservation)
     {
         $notification = new ReservationMailNotification();
         $notification->notifyToCustomer($reservation);
