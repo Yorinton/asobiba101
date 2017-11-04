@@ -31,6 +31,29 @@ class Options
         '付けない' => '付けない',
     ];
 
+    private const priceOptionsSet = [
+        'ゴミ処理' => 1500,
+        'コタツ(布団付き)' => 3000,
+        '電気グリル鍋' => 2000,
+        '大きな鍋' => 1000,
+        'カセットコンロ' => 1500,
+        'たこ焼き器' => 1500,
+        '大人数レイアウト' => 4000,
+        '寿司桶' => 500,
+        'プロジェクター' => 1500,
+        '深夜利用' => 5000,
+        '宿泊(1〜3名様)' => 6000,
+        '宿泊(4〜5名様)' => 8000,
+        'コテ' => 1000,
+        '撮影用ミニライト' => 1000,
+        '姿見鏡' => 1000,
+        'サプライズ装飾' => 4000,
+        '炊飯器' => 1500,
+        'トースター' => 1500,
+        'ミキサー' => 1000,
+        '付けない' => 0,
+    ];
+
     public function __construct(array $options, Plan $plan, $end_time)
     {
         if (!self::isValidValue($options)) {
@@ -59,12 +82,16 @@ class Options
 
     public function getTotalPrice(): int
     {
-        return PriceOfOptions::getTotalPrice($this->options);
+        $totalPrice = 0;
+        foreach ($this->options as $option) {
+            $totalPrice += $this::priceOptionsSet[$option];
+        }
+        return (int)$totalPrice;
     }
 
     public function getOptionAndPriceSet(): array
     {
-        return PriceOfOptions::getOptionAndPriceSet($this->options);
+        return array_intersect_key($this::priceOptionsSet, array_flip($this->options));
     }
 
     public function hasLargeGroupOption(): bool
