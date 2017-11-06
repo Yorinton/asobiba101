@@ -30,8 +30,9 @@ class CapacityTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
-            );          
+            );
             $this->fail('例外発生無し');
         }catch(\InvalidArgumentException $e){
             $this->assertEquals('適切な利用人数を設定して下さい',$e->getMessage());
@@ -52,6 +53,7 @@ class CapacityTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );             
             $this->fail('例外発生無し');
@@ -75,6 +77,7 @@ class CapacityTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );             
             $this->fail('例外発生無し');
@@ -97,6 +100,7 @@ class CapacityTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             ); 
             $this->assertTrue(true);
@@ -119,6 +123,7 @@ class CapacityTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             ); 
             $this->assertTrue(true);
@@ -141,6 +146,7 @@ class CapacityTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             ); 
             $this->assertTrue(true);

@@ -28,6 +28,7 @@ class GetValueTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
         $this->assertEquals('【非商用】基本プラン(平日)',$reservation->getPlanName());
@@ -47,6 +48,7 @@ class GetValueTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
         $this->assertEquals('2017-11-26',$reservation->getDate());
@@ -61,6 +63,7 @@ class GetValueTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
         $this->assertEquals(22,$reservation->getEndTime());
@@ -73,6 +76,7 @@ class GetValueTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
         $this->assertEquals(24,$reservation->getEndTime());
@@ -93,6 +97,7 @@ class GetValueTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
         $this->assertEquals('Contact',$reservation->getStatus());
@@ -127,6 +132,7 @@ class GetValueTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
         $this->assertEquals(10,$reservation->getNumber());

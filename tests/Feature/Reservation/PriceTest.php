@@ -28,6 +28,7 @@ class PriceTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
         $this->assertEquals($reservation->getTotalPrice(),28500);
@@ -50,6 +51,7 @@ class PriceTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
 
@@ -75,6 +77,7 @@ class PriceTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
 

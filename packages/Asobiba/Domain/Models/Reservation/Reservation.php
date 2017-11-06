@@ -24,6 +24,9 @@ class Reservation
     /** @var DateOfUse */
     private $dateOfUse;
 
+    /** @var Purpose  */
+    private $purpose;
+
     /** @var Question */
     private $question;
 
@@ -47,6 +50,7 @@ class Reservation
         string $date,
         int $start_time,
         int $end_time,
+        string $purpose,
         string $question = null
     )
     {
@@ -56,6 +60,7 @@ class Reservation
         $this->dateOfUse = new DateOfUse($date, $start_time, $end_time, $this->plan, $this->options);
         $this->capacity = new Capacity($this->plan, $this->options);
         $this->number = new Number($number, $this->capacity);
+        $this->purpose = new Purpose($purpose);
         $this->question = new Question($question);
         if ($this->hasQuestion()) {
             $this->status = new Status('Contact');

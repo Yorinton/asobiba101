@@ -28,6 +28,7 @@ class QuestionTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         ); 
 
@@ -45,6 +46,7 @@ class QuestionTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         ); 
 
@@ -63,6 +65,7 @@ class QuestionTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         ); 
 
