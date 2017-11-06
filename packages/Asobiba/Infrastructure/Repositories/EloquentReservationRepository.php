@@ -6,6 +6,8 @@ use App\Eloquents\Reservation\EloquentReservation;
 use App\Eloquents\Reservation\EloquentOption;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
 use Asobiba\Domain\Models\Reservation\Reservation;
+use Asobiba\Domain\Models\Reservation\ReservationId;
+
 
 class EloquentReservationRepository implements ReservationRepositoryInterface
 {
@@ -33,6 +35,12 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
             $eloquentReservation->options()->save($option);
         }
 
+    }
+
+    public function nextIdentity(): ReservationId
+    {
+        //DBのシーケンスを使ってidを取得する
+        return new ReservationId;
     }
 }
 

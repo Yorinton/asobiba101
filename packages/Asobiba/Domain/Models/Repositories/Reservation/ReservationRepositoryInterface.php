@@ -7,6 +7,8 @@ use Asobiba\Domain\Models\Reservation\Reservation;
 interface ReservationRepositoryInterface
 {
     public function add(Reservation $reservation);
+
+    public function nextIdentity();
 }
 
 
