@@ -29,6 +29,7 @@ class UseDateTimeTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );
             $this->assertTrue(true);
@@ -50,6 +51,7 @@ class UseDateTimeTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );
             $this->fail('例外発生無し');
@@ -73,6 +75,7 @@ class UseDateTimeTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );
             $this->fail('例外発生無し');
@@ -96,6 +99,7 @@ class UseDateTimeTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );
             $this->fail('例外発生無し');
@@ -118,6 +122,7 @@ class UseDateTimeTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );
             $this->assertEquals($reservation->getEndTime(), 9);
@@ -135,6 +140,7 @@ class UseDateTimeTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );
             $this->assertEquals($reservation->getEndTime(), 24);
@@ -156,6 +162,7 @@ class UseDateTimeTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );
             $this->fail('例外無し');
@@ -177,6 +184,7 @@ class UseDateTimeTest extends TestCase
                 $request->date,
                 $request->start_time,
                 $request->end_time,
+                $request->purpose,
                 $request->question
             );
             $this->fail('例外無し');

@@ -29,6 +29,7 @@ class InstantiationTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
 
@@ -51,6 +52,7 @@ class InstantiationTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
 
@@ -61,6 +63,7 @@ class InstantiationTest extends TestCase
             $request->date,
             $request->start_time,
             $request->end_time,
+            $request->purpose,
             $request->question
         );
 
