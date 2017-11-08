@@ -14,36 +14,47 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
 {
     public function add(Reservation $reservation)
     {
-        //Reservationの永続化
-        $eloquentReservation = new EloquentReservation();
-        $eloquentReservation->id = $reservation->getId();
-        $eloquentReservation->plan = $reservation->getPlanName();
-        $eloquentReservation->price = $reservation->getTotalPrice();
+        DB::beginTransaction();
+        try {
+            //Reservationの永続化
+            $eloquentReservation = new EloquentReservation();
+            $eloquentReservation->id = $reservation->getId();
+            $eloquentReservation->plan = $reservation->getPlanName();
+            $eloquentReservation->price = $reservation->getPriceOfPlan();
+            $eloquentReservation->number = $reservation->getNumber();
+            $eloquentReservation->date = $reservation->getDate();
+            $eloquentReservation->start_time = $reservation->getStartTime();
+            $eloquentReservation->end_time = $reservation->getEndTime();
+            $eloquentReservation->question = $reservation->getQuestion();
+            $eloquentReservation->status = $reservation->getStatus();
 
-        //以下EloquentReservationを通してDBにreservationの値を登録していく
-        // ・・・
+            $eloquentReservation->save();
 
-        $eloquentReservation->save();
-
-        //Reservationと関連するオプションの永続化
-        if(!$reservation->getOptionAndPriceSet()) {
-            return;
-        }
-        foreach ($reservation->getOptionAndPriceSet() as $name => $price) {
-            $option = new EloquentOption();
-            $option->name = $name;
-            $option->price = $price;
-            $eloquentReservation->options()->save($option);
+            //Reservationと関連するオプションの永続化(別リポジトリに移す)
+            if (!$reservation->getOptionAndPriceSet()) {
+                return;
+            }
+            foreach ($reservation->getOptionAndPriceSet() as $name => $price) {
+                $option = new EloquentOption();
+                $option->name = $name;
+                $option->price = $price;
+                $eloquentReservation->options()->save($option);
+            }
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+            dd($e->getMessage());
         }
 
     }
 
     public function nextIdentity(): ReservationId
     {
-        //Update文実行DB::raw
+        //nextvalに識別子となる値を挿入
         DB::table('reservation_seqs')->update(["nextval" => DB::raw("LAST_INSERT_ID(nextval + 1)")]);
         //識別子取得 selectでBuilderインスタンスを返して、getでCollectionを返す、firstでEloquent\Modelインスタンスを返す
-        $reservationId = DB::table('reservation_seqs')->select('nextval')->first()->nextval;
+        $reservationIdObj = DB::table('reservation_seqs')->selectRaw("LAST_INSERT_ID()")->first();
+        $reservationId = get_object_vars($reservationIdObj)["LAST_INSERT_ID()"];
 
         return new ReservationId($reservationId);
     }

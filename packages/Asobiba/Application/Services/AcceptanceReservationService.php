@@ -14,7 +14,7 @@ class AcceptanceReservationService
     public function reserve(Request $req)
     {
         $repository = new EloquentReservationRepository();
-        $id = $repository->nextIdentity();//実装前
+        $id = $repository->nextIdentity();
         $reservation = new Reservation(
             $id,
             $req->options,
