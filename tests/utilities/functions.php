@@ -51,4 +51,19 @@ function makeOtherRequestWithPurpose()
     return $request;
 }
 
+function createReservation($id,$request)
+{
+    return new Asobiba\Domain\Models\Reservation\Reservation(
+        $id,
+        $request->options,
+        $request->plan,
+        $request->number,
+        $request->date,
+        $request->start_time,
+        $request->end_time,
+        $request->purpose,
+        $request->question
+    );
+}
+
 ?>

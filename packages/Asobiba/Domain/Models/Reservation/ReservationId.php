@@ -8,12 +8,12 @@ class ReservationId
     /** @var */
     private $id;
 
-    public function __construct()
+    public function __construct(int $id)
     {
-        $this->id = uniqid('asobiba_',false);
+        $this->id = $id;
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }

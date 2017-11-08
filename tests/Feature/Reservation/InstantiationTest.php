@@ -4,13 +4,20 @@ namespace Tests\Feature\Reservation;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
 use Asobiba\Domain\Models\Reservation\Reservation;
-use Asobiba\Domain\Models\Reservation\DateOfUse;
-
+use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
+use DB;
 
 class InstantiationTest extends TestCase
 {
+
+    use RefreshDatabase;
+
+    public function repository()
+    {
+        DB::table('reservation_seqs')->insert(["nextval" => 0]);
+        return new EloquentReservationRepository;
+    }
 
     /**
      * Make Reservation instance test.
@@ -22,16 +29,8 @@ class InstantiationTest extends TestCase
 
         $request = makeCorrectRequest();
 
-        $reservation = new Reservation(
-            $request->options,
-            $request->plan,
-            $request->number,
-            $request->date,
-            $request->start_time,
-            $request->end_time,
-            $request->purpose,
-            $request->question
-        );
+        $id = $this->repository()->nextIdentity();
+        $reservation = createReservation($id,$request);
 
         $this->assertTrue(true);
     }
@@ -45,29 +44,13 @@ class InstantiationTest extends TestCase
     {
         $request = makeCorrectRequest();
 
-        $reservation = new Reservation(
-            $request->options,
-            $request->plan,
-            $request->number,
-            $request->date,
-            $request->start_time,
-            $request->end_time,
-            $request->purpose,
-            $request->question
-        );
+        $id = $this->repository()->nextIdentity();
+        $reservation = createReservation($id,$request);
 
-        $reservation2 = new Reservation(
-            $request->options,
-            $request->plan,
-            $request->number,
-            $request->date,
-            $request->start_time,
-            $request->end_time,
-            $request->purpose,
-            $request->question
-        );
+        $id = $this->repository()->nextIdentity();
+        $reservation2 = createReservation($id,$request);
 
-        $this->assertTrue($reservation->getId()->getId() !== $reservation2->getId()->getId());
+        $this->assertTrue($reservation->getId() !== $reservation2->getId());
     }
 
 }

@@ -44,6 +44,7 @@ class Reservation
      * @param string|null $question
      */
     public function __construct(
+        ReservationId $id,
         array $options,
         string $plan,
         int $number,
@@ -54,7 +55,7 @@ class Reservation
         string $question = null
     )
     {
-        $this->id = new ReservationId();
+        $this->id = $id;
         $this->plan = new Plan($plan);
         $this->options = new Options($options, $this->plan, $end_time);
         $this->dateOfUse = new DateOfUse($date, $start_time, $end_time, $this->plan, $this->options);
@@ -73,9 +74,9 @@ class Reservation
     /**
      * @return ReservationId
      */
-    public function getId(): ReservationId
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id->getId();
     }
 
     /**
