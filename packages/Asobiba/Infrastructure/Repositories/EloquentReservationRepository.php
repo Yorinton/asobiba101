@@ -6,6 +6,9 @@ use App\Eloquents\Reservation\EloquentReservation;
 use App\Eloquents\Reservation\EloquentOption;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
 use Asobiba\Domain\Models\Reservation\Reservation;
+use Asobiba\Domain\Models\Reservation\ReservationId;
+use DB;
+
 
 class EloquentReservationRepository implements ReservationRepositoryInterface
 {
@@ -33,6 +36,16 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
             $eloquentReservation->options()->save($option);
         }
 
+    }
+
+    public function nextIdentity(): ReservationId
+    {
+        //Update文実行DB::raw
+        DB::table('reservation_seqs')->update(["nextval" => DB::raw("LAST_INSERT_ID(nextval + 1)")]);
+        //識別子取得 selectでBuilderインスタンスを返して、getでCollectionを返す、firstでEloquent\Modelインスタンスを返す
+        $reservationId = DB::table('reservation_seqs')->select('nextval')->first()->nextval;
+
+        return new ReservationId($reservationId);
     }
 }
 

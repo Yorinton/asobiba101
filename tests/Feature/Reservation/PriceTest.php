@@ -4,14 +4,18 @@ namespace Tests\Feature\Reservation;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
-use Asobiba\Domain\Models\Reservation\Reservation;
-use Asobiba\Domain\Models\Reservation\DateOfUse;
-
+use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
+use DB;
 
 class PriceTest extends TestCase
 {
+    use RefreshDatabase;
 
+    public function repository()
+    {
+        DB::table('reservation_seqs')->insert(["nextval" => 0]);
+        return new EloquentReservationRepository;
+    }
     /**
      * Total price test.
      *
@@ -21,16 +25,8 @@ class PriceTest extends TestCase
     {
         $request = makeCorrectRequest();
 
-        $reservation = new Reservation(
-            $request->options,
-            $request->plan,
-            $request->number,
-            $request->date,
-            $request->start_time,
-            $request->end_time,
-            $request->purpose,
-            $request->question
-        );
+        $id = $this->repository()->nextIdentity();
+        $reservation = createReservation($id,$request);
         $this->assertEquals($reservation->getTotalPrice(),28500);
     }
 
@@ -44,16 +40,8 @@ class PriceTest extends TestCase
 
         $request = makeCorrectRequest();
 
-        $reservation = new Reservation(
-            $request->options,
-            $request->plan,
-            $request->number,
-            $request->date,
-            $request->start_time,
-            $request->end_time,
-            $request->purpose,
-            $request->question
-        );
+        $id = $this->repository()->nextIdentity();
+        $reservation = createReservation($id,$request);
 
         $options = $reservation->getOptionAndPriceSet();
 
@@ -70,16 +58,8 @@ class PriceTest extends TestCase
     {
         $request = makeCorrectRequest();
 
-        $reservation = new Reservation(
-            $request->options,
-            $request->plan,
-            $request->number,
-            $request->date,
-            $request->start_time,
-            $request->end_time,
-            $request->purpose,
-            $request->question
-        );
+        $id = $this->repository()->nextIdentity();
+        $reservation = createReservation($id,$request);
 
         $this->assertEquals(19500,$reservation->getPriceOfPlan());
     }

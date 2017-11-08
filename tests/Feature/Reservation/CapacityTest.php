@@ -4,13 +4,19 @@ namespace Tests\Feature\Reservation;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
-use Asobiba\Domain\Models\Reservation\Reservation;
-use Asobiba\Domain\Models\Reservation\DateOfUse;
-
+use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
+use DB;
 
 class CapacityTest extends TestCase
 {
+
+    use RefreshDatabase;
+
+    public function repository()
+    {
+        DB::table('reservation_seqs')->insert(["nextval" => 0]);
+        return new EloquentReservationRepository;
+    }
 
     /**
      * Capacity test.
@@ -23,16 +29,8 @@ class CapacityTest extends TestCase
         $request->number = 13;
 
         try{
-            $reservation = new Reservation(
-                $request->options,
-                $request->plan,
-                $request->number,
-                $request->date,
-                $request->start_time,
-                $request->end_time,
-                $request->purpose,
-                $request->question
-            );
+            $id = $this->repository()->nextIdentity();
+            createReservation($id,$request);
             $this->fail('例外発生無し');
         }catch(\InvalidArgumentException $e){
             $this->assertEquals('適切な利用人数を設定して下さい',$e->getMessage());
@@ -46,16 +44,8 @@ class CapacityTest extends TestCase
         $request->number = 16;
 
         try{
-            $reservation = new Reservation(
-                $request->options,
-                $request->plan,
-                $request->number,
-                $request->date,
-                $request->start_time,
-                $request->end_time,
-                $request->purpose,
-                $request->question
-            );             
+            $id = $this->repository()->nextIdentity();
+            createReservation($id,$request);
             $this->fail('例外発生無し');
         }catch(\InvalidArgumentException $e){
             $this->assertEquals('適切な利用人数を設定して下さい',$e->getMessage());
@@ -70,16 +60,8 @@ class CapacityTest extends TestCase
         $request->number = 16;
 
         try{
-            $reservation = new Reservation(
-                $request->options,
-                $request->plan,
-                $request->number,
-                $request->date,
-                $request->start_time,
-                $request->end_time,
-                $request->purpose,
-                $request->question
-            );             
+            $id = $this->repository()->nextIdentity();
+            createReservation($id,$request);
             $this->fail('例外発生無し');
         }catch(\InvalidArgumentException $e){
             $this->assertEquals('適切な利用人数を設定して下さい',$e->getMessage());
@@ -93,16 +75,8 @@ class CapacityTest extends TestCase
         $request->number = 11;
 
         try{
-            $reservation = new Reservation(
-                $request->options,
-                $request->plan,
-                $request->number,
-                $request->date,
-                $request->start_time,
-                $request->end_time,
-                $request->purpose,
-                $request->question
-            ); 
+            $id = $this->repository()->nextIdentity();
+            createReservation($id,$request);
             $this->assertTrue(true);
         }catch(\InvalidArgumentException $e){
             $this->fail($e->getMessage());
@@ -116,16 +90,8 @@ class CapacityTest extends TestCase
         $request->number = 13;
 
         try{
-            $reservation = new Reservation(
-                $request->options,
-                $request->plan,
-                $request->number,
-                $request->date,
-                $request->start_time,
-                $request->end_time,
-                $request->purpose,
-                $request->question
-            ); 
+            $id = $this->repository()->nextIdentity();
+            createReservation($id,$request);
             $this->assertTrue(true);
         }catch(\InvalidArgumentException $e){
             $this->fail($e->getMessage());
@@ -139,16 +105,8 @@ class CapacityTest extends TestCase
         $request->number = 15;
 
         try{
-            $reservation = new Reservation(
-                $request->options,
-                $request->plan,
-                $request->number,
-                $request->date,
-                $request->start_time,
-                $request->end_time,
-                $request->purpose,
-                $request->question
-            ); 
+            $id = $this->repository()->nextIdentity();
+            createReservation($id,$request);
             $this->assertTrue(true);
         }catch(\InvalidArgumentException $e){
             $this->fail($e->getMessage());
