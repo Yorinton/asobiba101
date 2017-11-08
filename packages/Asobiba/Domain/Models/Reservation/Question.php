@@ -21,7 +21,7 @@ class Question
 
 	public function getQuestion(): String
 	{
-		return $this->question;
+		return $this->question ? $this->question : '';
 	}
 
 }
