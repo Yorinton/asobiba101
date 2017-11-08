@@ -40,10 +40,11 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
 
     public function nextIdentity(): ReservationId
     {
-        //Update文実行DB::raw
+        //nextvalに識別子となる値を挿入
         DB::table('reservation_seqs')->update(["nextval" => DB::raw("LAST_INSERT_ID(nextval + 1)")]);
         //識別子取得 selectでBuilderインスタンスを返して、getでCollectionを返す、firstでEloquent\Modelインスタンスを返す
-        $reservationId = DB::table('reservation_seqs')->select('nextval')->first()->nextval;
+        $reservationIdObj = DB::table('reservation_seqs')->selectRaw("LAST_INSERT_ID()")->first();
+        $reservationId = get_object_vars($reservationIdObj)["LAST_INSERT_ID()"];
 
         return new ReservationId($reservationId);
     }
