@@ -17,7 +17,7 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
     /**
      * @param Reservation $reservation
      */
-    public function add(Customer $customer,Reservation $reservation)
+    public function add(Customer $customer, Reservation $reservation)
     {
         DB::beginTransaction();
         try {
@@ -41,8 +41,8 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
             $eloquentReservation->status = $reservation->getStatus();
             $eloquentReservation->save();
 
-            //Reservationと関連するオプションの永続化(別リポジトリに移す)
-            if($reservation->getOptionAndPriceSet()) {
+            //Reservationと関連するオプションの永続化
+            if ($reservation->getOptionAndPriceSet()) {
                 foreach ($reservation->getOptionAndPriceSet() as $optionName => $price) {
                     $option = new EloquentOption();
                     $option->reservation_id = $reservation->getId();
@@ -51,24 +51,23 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
                     $option->save();
                 }
             }
+
             DB::commit();
-        }catch(\Exception $e){
+
+        } catch (\Exception $e) {
+
             DB::rollback();
             dd($e->getMessage());
+
         }
 
     }
 
     public function nextIdentity(): ReservationId
     {
-        //nextvalに識別子となる値を挿入
         DB::table('reservation_seqs')->update(["nextval" => DB::raw("LAST_INSERT_ID(nextval + 1)")]);
-        //識別子取得 selectでBuilderインスタンスを返して、getでCollectionを返す、firstでEloquent\Modelインスタンスを返す
         $reservationId = DB::table('reservation_seqs')->selectRaw("LAST_INSERT_ID() as id")->first()->id;
 
         return new ReservationId($reservationId);
     }
 }
-
-
-?>

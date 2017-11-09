@@ -2,6 +2,7 @@
 
 namespace Asobiba\Application\Service;
 
+use Asobiba\Domain\Models\Reservation\ReservationId;
 use Asobiba\Domain\Models\User\Customer;
 use Illuminate\Http\Request;
 use Asobiba\Domain\Models\Reservation\Reservation;
@@ -14,9 +15,24 @@ class AcceptanceReservationService
     //カスタマーからのリクエストを受け取ってDBに保存 + 自動返信メール送信
     public static function reserve(Request $req)
     {
+        //ReservationIdの生成
         $repository = new EloquentReservationRepository();
         $id = $repository->nextIdentity();
-        $reservation = new Reservation(
+
+        //ReservationエンティティとCustomerエンティティの生成
+        $reservation = self::createReservation($id,$req);
+        $customer = self::createCustomer($req);
+
+        //永続化処理
+        $repository->add($customer, $reservation);
+
+        //自動メール送信
+        self::sendAutoReply($customer,$reservation);
+    }
+
+    private static function createReservation(ReservationId $id,Request $req): Reservation
+    {
+        return new Reservation(
             $id,
             $req->options,
             $req->plan,
@@ -27,21 +43,24 @@ class AcceptanceReservationService
             $req->purpose,
             $req->question
         );
-        $customer = new Customer($req->name, $req->email);
-        $repository->add($customer, $reservation);
+    }
 
-        self::sendAutoReply($reservation);
+    private static function createCustomer(Request $req): Customer
+    {
+        return new Customer($req->name, $req->email);
     }
 
     //自動返信メールをカスタマー・マネージャー両方に送信
-    public static function sendAutoReply(Reservation $reservation)
+    private static function sendAutoReply(Customer $customer,Reservation $reservation)
     {
-        return true;
-//        $notification = new ReservationMailNotification();
-//        $notification->notifyToCustomer($reservation);
-//        $notification->notifyToManager($reservation);
+        return true;//テスト通す用
+        $notification = new ReservationMailNotification();
+        $notification->notifyToCustomer($customer,$reservation);
+        $notification->notifyToManager($customer,$reservation);
 
     }
+
+
 
 }
 
