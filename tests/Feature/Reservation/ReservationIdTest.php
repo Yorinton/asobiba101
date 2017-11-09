@@ -26,4 +26,5 @@ class ReservationIdTest extends TestCase
         $this->assertEquals(1,$reservationId->getId());
 
     }
+
 }
