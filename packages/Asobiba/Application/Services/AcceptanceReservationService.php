@@ -2,6 +2,7 @@
 
 namespace Asobiba\Application\Service;
 
+use Asobiba\Domain\Models\User\Customer;
 use Illuminate\Http\Request;
 use Asobiba\Domain\Models\Reservation\Reservation;
 use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
@@ -11,7 +12,7 @@ class AcceptanceReservationService
 {
 
     //カスタマーからのリクエストを受け取ってDBに保存 + 自動返信メール送信
-    public function reserve(Request $req)
+    public static function reserve(Request $req)
     {
         $repository = new EloquentReservationRepository();
         $id = $repository->nextIdentity();
@@ -23,23 +24,24 @@ class AcceptanceReservationService
             $req->date,
             $req->start_time,
             $req->end_time,
+            $req->purpose,
             $req->question
         );
-        $repository->add($reservation);
+        $customer = new Customer($req->name, $req->email);
+        $repository->add($customer, $reservation);
 
-        $this->sendAutoReply($reservation);
+        self::sendAutoReply($reservation);
     }
 
     //自動返信メールをカスタマー・マネージャー両方に送信
-    public function sendAutoReply(Reservation $reservation)
+    public static function sendAutoReply(Reservation $reservation)
     {
-        $notification = new ReservationMailNotification();
-        $notification->notifyToCustomer($reservation);
-        $notification->notifyToManager($reservation);
+        return true;
+//        $notification = new ReservationMailNotification();
+//        $notification->notifyToCustomer($reservation);
+//        $notification->notifyToManager($reservation);
 
     }
 
 }
 
-
-?>
