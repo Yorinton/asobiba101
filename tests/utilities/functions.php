@@ -65,5 +65,3 @@ function createReservation($id, $request)
         $request->question
     );
 }
-
-?>

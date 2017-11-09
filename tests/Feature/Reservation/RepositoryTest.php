@@ -21,6 +21,15 @@ class RepositoryTest extends TestCase
         return new EloquentReservationRepository;
     }
 
+    public function finish()
+    {
+        //要修正
+        DB::delete('delete from customers');
+        DB::statement("alter table customers auto_increment = 1");
+        DB::statement("alter table options auto_increment = 1");
+
+    }
+
     /**
      * A basic test example.
      *
@@ -31,23 +40,35 @@ class RepositoryTest extends TestCase
 
         $request = makeCorrectRequest();
 
+
         $customer = new Customer($request->name, $request->email);
         $id = $this->repository()->nextIdentity();
         $reservation = createReservation($id, $request);
         $this->repository()->add($customer, $reservation);//DBに保存
 
-        $eloquentReservation = $this->app->make(EloquentReservation::class);
-        $eloquentCustomer = $this->app->make(EloquentCustomer::class);
-        $eloquentOption = $this->app->make(EloquentOption::class);
+        $this->assertDatabaseHas('reservations', [
+            'plan' => '【非商用】基本プラン(平日)',
+            'id' => 1,
+            'customer_id' => 1,
+            'status' => 'Contact',
+            'price' => 19500,
+            'date' => '2017-11-26',
+            'number' => 10
+        ]);
 
-        $this->assertEquals('【非商用】基本プラン(平日)', $eloquentReservation->where('id', 1)->first()->plan);
-        $this->assertEquals(1, $eloquentReservation->where('id', 1)->first()->id);
-        $this->assertEquals(1, $eloquentReservation->where('id', 1)->first()->customer_id);
-        $this->assertEquals('Contact', $eloquentReservation->where('id', 1)->first()->status);
-        $this->assertEquals('テストユーザー', $eloquentCustomer->where('id', 1)->first()->name);
-        $this->assertEquals('ゴミ処理', $eloquentOption->where('id', 1)->first()->option);
-        $this->assertEquals(1500, $eloquentOption->where('id', 1)->first()->price);
+        $this->assertDatabaseHas('customers', [
+            'name' => 'テストユーザー',
+            'email' => 'sansan106700@gmail.com'
+        ]);
 
+        $options = ['ゴミ処理' => 1500, 'カセットコンロ' => 1500, '宿泊(1〜3名様)' => 6000];
+        foreach ($options as $option => $price) {
+            $this->assertDatabaseHas('options', [
+                'option' => $option,
+                'price' => $price
+            ]);
+        }
+        $this->finish();
 
     }
 }

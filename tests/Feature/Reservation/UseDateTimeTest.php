@@ -2,11 +2,8 @@
 
 namespace Tests\Feature\Reservation;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
-use Asobiba\Domain\Models\Reservation\Reservation;
-use Asobiba\Domain\Models\Reservation\DateOfUse;
+use Tests\TestCase;
 use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
 use DB;
 

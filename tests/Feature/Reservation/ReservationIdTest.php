@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
 use Asobiba\Domain\Models\Reservation\ReservationId;
 use DB;

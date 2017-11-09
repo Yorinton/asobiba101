@@ -21,9 +21,15 @@ class ServiceTest extends TestCase
     public function prepare()
     {
         DB::table('reservation_seqs')->insert(["nextval" => 0]);
-        $this->eloqReservation = $this->app->make(EloquentReservation::class);
-        $this->eloqCustomer = $this->app->make(EloquentCustomer::class);
-        $this->eloqOption = $this->app->make(EloquentOption::class);
+    }
+
+    public function finish()
+    {
+        //要修正
+        DB::delete('delete from customers');
+        DB::statement("alter table customers auto_increment = 1");
+        DB::statement("alter table options auto_increment = 1");
+
     }
 
     /**
@@ -39,13 +45,29 @@ class ServiceTest extends TestCase
 
         AcceptanceReservationService::reserve($request);
 
-        $this->assertEquals('【非商用】基本プラン(平日)',$this->eloqReservation->where('id',1)->first()->plan);
-        $this->assertEquals(1,$this->eloqReservation->where('id',1)->first()->id);
-        $this->assertEquals(1,$this->eloqReservation->where('id',1)->first()->customer_id);
-        $this->assertEquals('Contact',$this->eloqReservation->where('id',1)->first()->status);
-        $this->assertEquals('テストユーザー',$this->eloqCustomer->where('id',1)->first()->name);
-        $this->assertEquals('ゴミ処理',$this->eloqOption->where('id',1)->first()->option);
-        $this->assertEquals(1500,$this->eloqOption->where('id',1)->first()->price);
+        $this->assertDatabaseHas('reservations', [
+            'plan' => '【非商用】基本プラン(平日)',
+            'id' => 1,
+            'customer_id' => 1,
+            'status' => 'Contact',
+            'price' => 19500,
+            'date' => '2017-11-26',
+            'number' => 10
+        ]);
 
+        $this->assertDatabaseHas('customers', [
+            'name' => 'テストユーザー',
+            'email' => 'sansan106700@gmail.com'
+        ]);
+
+        $options = ['ゴミ処理' => 1500, 'カセットコンロ' => 1500, '宿泊(1〜3名様)' => 6000];
+        foreach ($options as $option => $price) {
+            $this->assertDatabaseHas('options', [
+                'option' => $option,
+                'price' => $price
+            ]);
+        }
+
+        $this->finish();
     }
 }
