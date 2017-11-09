@@ -38,7 +38,7 @@ class ReservationMailNotification implements ReservationNotification
      * @param Customer $customer
      * @param Reservation $reservation
      */
-    protected function createBodyToCustomer(Customer $customer, Reservation $reservation)
+    public function createBodyToCustomer(Customer $customer, Reservation $reservation)
     {
         return true;
     }
@@ -47,7 +47,7 @@ class ReservationMailNotification implements ReservationNotification
      * @param Customer $customer
      * @param Reservation $reservation
      */
-    protected function createBodyToManager(Customer $customer, Reservation $reservation)
+    public function createBodyToManager(Customer $customer, Reservation $reservation)
     {
         return true;
     }
