@@ -18,12 +18,12 @@ class Customer
 		$this->email = $email;	
 	}
 
-	public function getCustomerName()
+	public function getCustomerName():string
 	{
 		return $this->name;
 	}
 
-	public function getCustomerEmail()
+	public function getCustomerEmail():string
 	{
 		return $this->email;
 	}

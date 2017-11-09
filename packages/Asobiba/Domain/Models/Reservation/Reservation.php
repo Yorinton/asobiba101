@@ -121,11 +121,19 @@ class Reservation
         return $this->plan->getPlan();
     }
 
-
+    /**
+     * get capacity of guests.
+     *
+     * @return int
+     */
+    public function getCapacity(): int
+    {
+        return $this->capacity->getCapacity();
+    }
     /**
      * get number of guests.
      *
-     * @return string
+     * @return int
      */
     public function getNumber(): int
     {

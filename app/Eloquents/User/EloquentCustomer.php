@@ -2,6 +2,7 @@
 
 namespace App\Eloquents\User;
 
+use App\Eloquents\Reservation\EloquentReservation;
 use Illuminate\Database\Eloquent\Model;
 
 class EloquentCustomer extends Model
@@ -10,6 +11,6 @@ class EloquentCustomer extends Model
 
     public function reservation()
     {
-
+        return $this->hasOne(EloquentReservation::class,'customer_id');
     }
 }
