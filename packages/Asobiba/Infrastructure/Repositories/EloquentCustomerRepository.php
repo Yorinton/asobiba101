@@ -47,6 +47,7 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
         try {
             //Customerの永続化
             $eloquentCustomer = new EloquentCustomer();
+            $eloquentCustomer->id = $customer->getId();
             $eloquentCustomer->name = $customer->getName();
             $eloquentCustomer->email = $customer->getEmail();
             $eloquentCustomer->save();

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Asobiba\Application\Service\AcceptanceReservationService;
 use Asobiba\Domain\Models\Notification\ReservationNotificationInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
@@ -40,6 +41,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
           ReservationNotificationInterface::class,
           MailReservationNotification::class
+        );
+        $this->app->bind(AcceptanceReservationService::class,function(){
+                return new AcceptanceReservationService(
+                    $this->app->make(CustomerRepositoryInterface::class),
+                    $this->app->make(ReservationRepositoryInterface::class),
+                    $this->app->make(ReservationNotificationInterface::class)
+                );
+            }
         );
     }
 }

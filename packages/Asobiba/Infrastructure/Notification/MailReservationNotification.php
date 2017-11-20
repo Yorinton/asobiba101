@@ -14,10 +14,13 @@ class MailReservationNotification implements ReservationNotificationInterface
 
     public function notifyToCustomer(Customer $customer,Reservation $reservation): bool
     {
+
+        return true;
+
         Mail::to($customer->getEmail())
             ->send(new ToCustomerNotQuestion($customer,$reservation));
 
-        return true;
+
     }
 
 

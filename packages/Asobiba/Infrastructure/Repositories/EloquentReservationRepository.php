@@ -48,7 +48,7 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
             //Reservationの永続化
             $eloquentReservation = new EloquentReservation();
             $eloquentReservation->id = $reservation->getId();
-            $eloquentReservation->customer_id = $customerId;
+            $eloquentReservation->customer_id = $customerId->getId();
             $eloquentReservation->plan = $reservation->getPlanName();
             $eloquentReservation->price = $reservation->getPriceOfPlan();
             $eloquentReservation->number = $reservation->getNumber();

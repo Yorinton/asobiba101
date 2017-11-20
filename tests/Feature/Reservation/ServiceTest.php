@@ -21,13 +21,13 @@ class ServiceTest extends TestCase
     public function prepare()
     {
         DB::table('reservation_seqs')->insert(["nextval" => 0]);
+        DB::table('customer_seqs')->insert(["nextval" => 0]);
     }
 
     public function finish()
     {
         //要修正
         DB::delete('delete from customers');
-        DB::statement("alter table customers auto_increment = 1");
         DB::statement("alter table options auto_increment = 1");
 
     }
@@ -43,7 +43,8 @@ class ServiceTest extends TestCase
 
         $request = makeCorrectRequest();
 
-        AcceptanceReservationService::reserve($request);
+        $service = $this->app->make(AcceptanceReservationService::class);
+        $service->reserve($request);
 
         $this->assertDatabaseHas('reservations', [
             'plan' => '【非商用】基本プラン(平日)',

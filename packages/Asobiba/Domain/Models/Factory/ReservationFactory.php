@@ -21,8 +21,8 @@ class ReservationFactory
         return new Reservation(
             $reservationId,
             $plan = new Plan($req->plan),
-            $options = new Options($req->options, $req->plan, $req->end_time),
-            new DateOfUse($req->date, $req->start_time, $req->end_time, $req->plan, $req->options),
+            $options = new Options($req->options, $plan, $req->end_time),
+            new DateOfUse($req->date, $req->start_time, $req->end_time, $plan, $options),
             $capacity = new Capacity($plan, $options),
             new Number($req->number, $capacity),
             new Purpose($req->purpose),
