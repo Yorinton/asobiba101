@@ -2,65 +2,50 @@
 
 namespace Asobiba\Application\Service;
 
-use Asobiba\Domain\Models\Reservation\ReservationId;
-use Asobiba\Domain\Models\User\Customer;
+use Asobiba\Domain\Models\Notification\ReservationNotificationInterface;
+use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
+use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
 use Illuminate\Http\Request;
-use Asobiba\Domain\Models\Reservation\Reservation;
-use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
-use Infrastructure\Notification\ReservationMailNotification;
 
 class AcceptanceReservationService
 {
 
-    //カスタマーからのリクエストを受け取ってDBに保存 + 自動返信メール送信
-    public static function reserve(Request $req)
+    private $customerRepo;
+    private $reservationRepo;
+    private $notification;
+
+    public function __construct
+    (
+        CustomerRepositoryInterface $customerRepo,
+        ReservationRepositoryInterface $reservationRepo,
+        ReservationNotificationInterface $notification
+    )
     {
-        //ReservationIdの生成
-        $repository = new EloquentReservationRepository();
-        $id = $repository->nextIdentity();
+        $this->customerRepo = $customerRepo;
+        $this->reservationRepo = $reservationRepo;
+        $this->notification = $notification;
+    }
 
-        //ReservationエンティティとCustomerエンティティの生成
-        $reservation = self::createReservation($id,$req);
-        $customer = self::createCustomer($req);
+    //カスタマーからのリクエストを受け取ってDBに保存 + 自動返信メール送信
+    public function reserve(Request $req)//Requestに依存すると独自のリクエストクラスを定義した時にここにも変更を加えないといけない
+    {
+        //Customerエンティティ生成
+        $customerId = $this->customerRepo->nextIdentity();
+        $customer = $this->customerRepo->new($customerId, $req);
 
-        //永続化処理
-        $repository->add($customer, $reservation);
+        //Reservationエンティティ生成
+        $reservationId = $this->reservationRepo->nextIdentity();
+        $reservation = $this->reservationRepo->new($reservationId, $req);
+
+        //Customer永続化
+        $this->customerRepo->persist($customer);
+        //Reservation永続化
+        $this->reservationRepo->persist($customerId,$reservation);
 
         //自動メール送信
-        self::sendAutoReply($customer,$reservation);
+        $this->notification->notifyToCustomer($customer,$reservation);
+        $this->notification->notifyToManager($customer,$reservation);
     }
-
-    private static function createReservation(ReservationId $id,Request $req): Reservation
-    {
-        return new Reservation(
-            $id,
-            $req->options,
-            $req->plan,
-            $req->number,
-            $req->date,
-            $req->start_time,
-            $req->end_time,
-            $req->purpose,
-            $req->question
-        );
-    }
-
-    private static function createCustomer(Request $req): Customer
-    {
-        return new Customer($req->name, $req->email);
-    }
-
-    //自動返信メールをカスタマー・マネージャー両方に送信
-    private static function sendAutoReply(Customer $customer,Reservation $reservation)
-    {
-        return true;//テスト通す用
-        $notification = new ReservationMailNotification();
-        $notification->notifyToCustomer($customer,$reservation);
-        $notification->notifyToManager($customer,$reservation);
-
-    }
-
-
 
 }
 

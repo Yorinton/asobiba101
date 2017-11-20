@@ -5,32 +5,50 @@ namespace Asobiba\Infrastructure\Repositories;
 use App\Eloquents\Reservation\EloquentReservation;
 use App\Eloquents\Reservation\EloquentOption;
 use App\Eloquents\User\EloquentCustomer;
+use Asobiba\Domain\Models\Factory\ReservationFactory;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
 use Asobiba\Domain\Models\Reservation\Reservation;
 use Asobiba\Domain\Models\Reservation\ReservationId;
 use Asobiba\Domain\Models\User\Customer;
+use Asobiba\Domain\Models\User\CustomerId;
 use DB;
+use Illuminate\Http\Request;
 
 
 class EloquentReservationRepository implements ReservationRepositoryInterface
 {
-    /**
-     * @param Reservation $reservation
-     */
-    public function add(Customer $customer, Reservation $reservation)
+
+    private $factory;
+    private $sequence_table_name = 'reservation_seqs';
+
+
+    public function __construct(ReservationFactory $factory)
+    {
+        $this->factory = $factory;
+    }
+
+
+    public function nextIdentity(): ReservationId
+    {
+        DB::table($this->sequence_table_name)->update(["nextval" => DB::raw("LAST_INSERT_ID(nextval + 1)")]);
+        $reservationId = DB::table($this->sequence_table_name)->selectRaw("LAST_INSERT_ID() as id")->first()->id;
+
+        return new ReservationId($reservationId);
+    }
+
+    public function new(ReservationId $reservationId, Request $req): Reservation
+    {
+        return $this->factory->createFromRequest($reservationId, $req);
+    }
+
+    public function persist(CustomerId $customerId, Reservation $reservation)
     {
         DB::beginTransaction();
         try {
-            //Customerの永続化
-            $eloquentCustomer = new EloquentCustomer();
-            $eloquentCustomer->name = $customer->getCustomerName();
-            $eloquentCustomer->email = $customer->getCustomerEmail();
-            $eloquentCustomer->save();
-
             //Reservationの永続化
             $eloquentReservation = new EloquentReservation();
             $eloquentReservation->id = $reservation->getId();
-            $eloquentReservation->customer_id = $eloquentCustomer->id;
+            $eloquentReservation->customer_id = $customerId;
             $eloquentReservation->plan = $reservation->getPlanName();
             $eloquentReservation->price = $reservation->getPriceOfPlan();
             $eloquentReservation->number = $reservation->getNumber();
@@ -63,11 +81,4 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
 
     }
 
-    public function nextIdentity(): ReservationId
-    {
-        DB::table('reservation_seqs')->update(["nextval" => DB::raw("LAST_INSERT_ID(nextval + 1)")]);
-        $reservationId = DB::table('reservation_seqs')->selectRaw("LAST_INSERT_ID() as id")->first()->id;
-
-        return new ReservationId($reservationId);
-    }
 }

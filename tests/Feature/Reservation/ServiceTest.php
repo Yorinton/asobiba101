@@ -70,4 +70,5 @@ class ServiceTest extends TestCase
 
         $this->finish();
     }
+
 }

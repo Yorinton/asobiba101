@@ -7,7 +7,7 @@ class Number
 
     private $number;
 
-    public function __construct(Int $number, Capacity $capacity)
+    public function __construct(int $number, Capacity $capacity)
     {
         if (!$this->isAcceptableNumber($number, $capacity)) {
             throw new \InvalidArgumentException('適切な利用人数を設定して下さい');
@@ -15,7 +15,7 @@ class Number
         $this->number = $number;
     }
 
-    public function isAcceptableNumber(Int $number, Capacity $capacity): bool
+    public function isAcceptableNumber(int $number, Capacity $capacity): bool
     {
         if ($number > $capacity->getCapacity()) {
             return false;
@@ -31,7 +31,5 @@ class Number
         return $this->number;
     }
 
+
 }
-
-
-?>

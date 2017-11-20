@@ -35,34 +35,33 @@ class Reservation
 
     /**
      * Reservation constructor.
-     * @param array $options
-     * @param string $plan
-     * @param int $number
-     * @param string $date
-     * @param int $start_time
-     * @param int $end_time
-     * @param string|null $question
+     * @param ReservationId $id
+     * @param Plan $plan
+     * @param Options $options
+     * @param DateOfUse $dateOfUse
+     * @param Number $number
+     * @param Purpose $purpose
+     * @param Question $question
      */
     public function __construct(
         ReservationId $id,
-        array $options,
-        string $plan,
-        int $number,
-        string $date,
-        int $start_time,
-        int $end_time,
-        string $purpose,
-        string $question = null
+        Plan $plan,
+        Options $options,
+        DateOfUse $dateOfUse,
+        Capacity $capacity,
+        Number $number,
+        Purpose $purpose,
+        Question $question
     )
     {
         $this->id = $id;
-        $this->plan = new Plan($plan);
-        $this->options = new Options($options, $this->plan, $end_time);
-        $this->dateOfUse = new DateOfUse($date, $start_time, $end_time, $this->plan, $this->options);
-        $this->capacity = new Capacity($this->plan, $this->options);
-        $this->number = new Number($number, $this->capacity);
-        $this->purpose = new Purpose($purpose);
-        $this->question = new Question($question);
+        $this->plan = $plan;
+        $this->options = $options;
+        $this->dateOfUse = $dateOfUse;
+        $this->number = $number;
+        $this->capacity = $capacity;
+        $this->purpose = $purpose;
+        $this->question = $question;
         if ($this->hasQuestion()) {
             $this->status = new Status('Contact');
         } else {
