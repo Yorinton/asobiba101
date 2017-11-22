@@ -5,7 +5,6 @@ namespace Asobiba\Application\Service;
 use Asobiba\Domain\Models\Notification\ReservationNotificationInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
-use Illuminate\Http\Request;
 
 class AcceptanceReservationService
 {
@@ -27,7 +26,7 @@ class AcceptanceReservationService
     }
 
     //カスタマーからのリクエストを受け取ってDBに保存 + 自動返信メール送信
-    public function reserve(Request $req)//Requestに依存すると独自のリクエストクラスを定義した時にここにも変更を加えないといけない
+    public function reserve(array $req)//Requestに依存すると独自のリクエストクラスを定義した時にここにも変更を加えないといけない
     {
         //Reservationエンティティ生成
         $reservation = $this->reservationRepo->new($req);

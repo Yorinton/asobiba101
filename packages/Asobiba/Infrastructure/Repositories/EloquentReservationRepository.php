@@ -4,23 +4,17 @@ namespace Asobiba\Infrastructure\Repositories;
 
 use App\Eloquents\Reservation\EloquentReservation;
 use App\Eloquents\Reservation\EloquentOption;
-use App\Eloquents\User\EloquentCustomer;
 use Asobiba\Domain\Models\Factory\ReservationFactory;
-use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
 use Asobiba\Domain\Models\Reservation\Reservation;
 use Asobiba\Domain\Models\Reservation\ReservationId;
-use Asobiba\Domain\Models\User\Customer;
-use Asobiba\Domain\Models\User\CustomerId;
 use DB;
-use Illuminate\Http\Request;
 
 
 class EloquentReservationRepository implements ReservationRepositoryInterface
 {
 
     private $factory;
-    private $customerRepo;
     private $sequence_table_name = 'reservation_seqs';
 
 
@@ -39,7 +33,7 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
     }
 
 
-    public function new(Request $req): Reservation
+    public function new(array $req): Reservation
     {
         $reservationId = $this->nextIdentity();
         return $this->factory->createFromRequest($reservationId, $req);

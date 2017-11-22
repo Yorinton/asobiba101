@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 function makeCorrectRequest()
 {
     $request = new Illuminate\Http\Request();
@@ -64,4 +66,25 @@ function createReservation($id, $request)
         $request->purpose,
         $request->question
     );
+}
+
+function reqToArray(Request $req): array
+{
+    $exception = [
+        'attributes',
+        'request',
+        'query',
+        'server',
+        'files',
+        'cookies',
+        'headers'
+    ];
+
+    foreach($req as $key => $value){
+        if(in_array($key,$exception)){
+            continue;
+        }
+        $array[$key] = $value;
+    }
+    return $array;
 }

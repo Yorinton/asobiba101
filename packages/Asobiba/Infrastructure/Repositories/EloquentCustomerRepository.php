@@ -2,8 +2,7 @@
 
 namespace Asobiba\Infrastructure\Repositories;
 
-use App\Eloquents\Reservation\EloquentReservation;
-use App\Eloquents\Reservation\EloquentOption;
+
 use App\Eloquents\User\EloquentCustomer;
 use Asobiba\Domain\Models\Factory\CustomerFactory;
 use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
@@ -11,7 +10,6 @@ use Asobiba\Domain\Models\Reservation\Reservation;
 use Asobiba\Domain\Models\User\Customer;
 use Asobiba\Domain\Models\User\CustomerId;
 use DB;
-use Illuminate\Http\Request;
 
 
 class EloquentCustomerRepository implements CustomerRepositoryInterface
@@ -34,7 +32,7 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
         return new CustomerId($customerId);
     }
 
-    public function new(Request $req): Customer
+    public function new(array $req): Customer
     {
         $customerId = $this->nextIdentity();
         return $this->factory->createFromRequest($customerId,$req);

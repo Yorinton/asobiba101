@@ -12,7 +12,6 @@ use Asobiba\Domain\Models\Reservation\Purpose;
 use Asobiba\Domain\Models\Reservation\Question;
 use Asobiba\Domain\Models\Reservation\Reservation;
 use Asobiba\Domain\Models\Reservation\ReservationId;
-use Illuminate\Http\Request;
 
 class ReservationFactory
 {
@@ -25,7 +24,7 @@ class ReservationFactory
     }
 
 
-    public function createFromRequest(ReservationId $reservationId, Request $req):Reservation
+    public function createFromRequest(ReservationId $reservationId, array $req):Reservation
     {
 
         $customer = $this->customerRepo->new($req);
@@ -33,13 +32,13 @@ class ReservationFactory
         return new Reservation(
             $reservationId,
             $customer,
-            $plan = new Plan($req->plan),
-            $options = new Options($req->options, $plan, $req->end_time),
-            new DateOfUse($req->date, $req->start_time, $req->end_time, $plan, $options),
+            $plan = new Plan($req['plan']),
+            $options = new Options($req['options'], $plan, $req['end_time']),
+            new DateOfUse($req['date'], $req['start_time'], $req['end_time'], $plan, $options),
             $capacity = new Capacity($plan, $options),
-            new Number($req->number, $capacity),
-            new Purpose($req->purpose),
-            new Question($req->question)
+            new Number($req['number'], $capacity),
+            new Purpose($req['purpose']),
+            new Question($req['question'])
         );
     }
 }
