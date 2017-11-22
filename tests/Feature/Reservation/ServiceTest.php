@@ -14,9 +14,6 @@ class ServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $eloqReservation;
-    private $eloqCustomer;
-    private $eloqOption;
 
     public function prepare()
     {

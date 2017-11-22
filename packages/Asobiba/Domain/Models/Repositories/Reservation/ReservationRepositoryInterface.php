@@ -11,10 +11,7 @@ interface ReservationRepositoryInterface
 {
     public function nextIdentity();
 
-    public function new(ReservationId $reservationId,Request $req);
+    public function new(Request $req);
 
-    public function persist(CustomerId $customerId,Reservation $reservation);
+    public function persist(Reservation $reservation);
 }
-
-
-?>

@@ -4,10 +4,15 @@ namespace Asobiba\Domain\Models\Reservation;
 
 
 //リクエストに依存しないように変更
+use Asobiba\Domain\Models\User\Customer;
+use Asobiba\Domain\Models\User\CustomerId;
+
 class Reservation
 {
     /** @var  ReservationId */
     private $id;
+
+    private $customer;
 
     /** @var Options */
     private $options;
@@ -45,6 +50,7 @@ class Reservation
      */
     public function __construct(
         ReservationId $id,
+        Customer $customer,
         Plan $plan,
         Options $options,
         DateOfUse $dateOfUse,
@@ -55,6 +61,7 @@ class Reservation
     )
     {
         $this->id = $id;
+        $this->customer = $customer;
         $this->plan = $plan;
         $this->options = $options;
         $this->dateOfUse = $dateOfUse;
@@ -78,6 +85,11 @@ class Reservation
         return $this->id->getId();
     }
 
+
+    public function getCustomer() :Customer
+    {
+        return $this->customer;
+    }
     /**
      * get total price of this reservation
      *

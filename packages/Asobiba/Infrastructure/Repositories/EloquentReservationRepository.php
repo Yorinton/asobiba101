@@ -6,6 +6,7 @@ use App\Eloquents\Reservation\EloquentReservation;
 use App\Eloquents\Reservation\EloquentOption;
 use App\Eloquents\User\EloquentCustomer;
 use Asobiba\Domain\Models\Factory\ReservationFactory;
+use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
 use Asobiba\Domain\Models\Reservation\Reservation;
 use Asobiba\Domain\Models\Reservation\ReservationId;
@@ -19,6 +20,7 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
 {
 
     private $factory;
+    private $customerRepo;
     private $sequence_table_name = 'reservation_seqs';
 
 
@@ -36,19 +38,21 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
         return new ReservationId($reservationId);
     }
 
-    public function new(ReservationId $reservationId, Request $req): Reservation
+
+    public function new(Request $req): Reservation
     {
+        $reservationId = $this->nextIdentity();
         return $this->factory->createFromRequest($reservationId, $req);
     }
 
-    public function persist(CustomerId $customerId, Reservation $reservation)
+    public function persist(Reservation $reservation)
     {
         DB::beginTransaction();
         try {
             //Reservationの永続化
             $eloquentReservation = new EloquentReservation();
             $eloquentReservation->id = $reservation->getId();
-            $eloquentReservation->customer_id = $customerId->getId();
+            $eloquentReservation->customer_id = $reservation->getCustomer()->getId()->getId();
             $eloquentReservation->plan = $reservation->getPlanName();
             $eloquentReservation->price = $reservation->getPriceOfPlan();
             $eloquentReservation->number = $reservation->getNumber();

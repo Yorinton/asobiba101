@@ -2,6 +2,7 @@
 
 namespace Asobiba\Domain\Models\Factory;
 
+use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
 use Asobiba\Domain\Models\Reservation\Capacity;
 use Asobiba\Domain\Models\Reservation\DateOfUse;
 use Asobiba\Domain\Models\Reservation\Number;
@@ -16,10 +17,22 @@ use Illuminate\Http\Request;
 class ReservationFactory
 {
 
+    private $customerRepo;
+
+    public function __construct(CustomerRepositoryInterface $customerRepo)
+    {
+        $this->customerRepo = $customerRepo;
+    }
+
+
     public function createFromRequest(ReservationId $reservationId, Request $req):Reservation
     {
+
+        $customer = $this->customerRepo->new($req);
+
         return new Reservation(
             $reservationId,
+            $customer,
             $plan = new Plan($req->plan),
             $options = new Options($req->options, $plan, $req->end_time),
             new DateOfUse($req->date, $req->start_time, $req->end_time, $plan, $options),

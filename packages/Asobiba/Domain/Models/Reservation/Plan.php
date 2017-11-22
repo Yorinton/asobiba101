@@ -73,6 +73,3 @@ final class Plan extends Enum
 
 
 }
-
-
-?>

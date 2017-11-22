@@ -7,8 +7,8 @@ use Asobiba\Domain\Models\User\Customer;
 
 interface ReservationNotificationInterface
 {
-    function notifyToCustomer(Customer $customer,Reservation $reservation);
+    function notifyToCustomer(Reservation $reservation);
 
-    function notifyToManager(Customer $customer,Reservation $reservation);
+    function notifyToManager(Reservation $reservation);
 
 }

@@ -34,8 +34,9 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
         return new CustomerId($customerId);
     }
 
-    public function new(CustomerId $customerId,Request $req)
+    public function new(Request $req): Customer
     {
+        $customerId = $this->nextIdentity();
         return $this->factory->createFromRequest($customerId,$req);
     }
     /**
@@ -47,9 +48,9 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
         try {
             //Customerの永続化
             $eloquentCustomer = new EloquentCustomer();
-            $eloquentCustomer->id = $customer->getId();
-            $eloquentCustomer->name = $customer->getName();
-            $eloquentCustomer->email = $customer->getEmail();
+            $eloquentCustomer->id = $customer->getId()->getId();
+            $eloquentCustomer->name = $customer->getName()->getName();
+            $eloquentCustomer->email = $customer->getEmail()->getEmail();
             $eloquentCustomer->save();
 
             DB::commit();

@@ -12,7 +12,7 @@ class MailReservationNotification implements ReservationNotificationInterface
 {
 
 
-    public function notifyToCustomer(Customer $customer,Reservation $reservation): bool
+    public function notifyToCustomer(Reservation $reservation): bool
     {
 
         return true;
@@ -24,7 +24,7 @@ class MailReservationNotification implements ReservationNotificationInterface
     }
 
 
-    public function notifyToManager(Customer $customer,Reservation $reservation): bool
+    public function notifyToManager(Reservation $reservation): bool
     {
         // TODO: Implement notifyToManager() method.
         // メール送信

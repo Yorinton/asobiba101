@@ -2,9 +2,6 @@
 
 namespace Asobiba\Domain\Models\User;
 
-/**
-* 
-*/
 class Customer
 {
 	private $id;
@@ -20,20 +17,18 @@ class Customer
 		$this->email = $email;	
 	}
 
-	public function getId(): int
+	public function getId(): CustomerId
     {
-        return $this->id->getId();
+        return $this->id;
     }
 
-	public function getName():string
+	public function getName(): CustomerName
 	{
-		return $this->name->getName();
+		return $this->name;
 	}
 
-	public function getEmail():string
+	public function getEmail(): CustomerEmail
 	{
-		return $this->email->getEmail();
+		return $this->email;
 	}
 }
-
-?>

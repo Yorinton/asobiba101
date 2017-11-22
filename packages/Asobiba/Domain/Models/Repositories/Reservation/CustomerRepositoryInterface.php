@@ -10,7 +10,7 @@ interface CustomerRepositoryInterface
 {
     public function nextIdentity();
 
-    public function new(CustomerId $customerId,Request $req);
+    public function new(Request $req);
 
     public function persist(Customer $customer);
 
