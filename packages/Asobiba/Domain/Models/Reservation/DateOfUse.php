@@ -36,7 +36,7 @@ class DateOfUse
 		$this->end_time = $this->optimizeEndTime($options,$end_time);
 	}
 
-	private function isAvailable($date,$start_time,$end_time)
+	public function isAvailable($date,$start_time,$end_time)
 	{
 		//Googleカレンダーに問い合わせる
 		return true;

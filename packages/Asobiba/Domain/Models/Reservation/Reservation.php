@@ -185,9 +185,10 @@ class Reservation
      *
      * @return string
      */
-    public function getDate(): string
+    public function getDate(): dateOfUse
     {
-        return $this->dateOfUse->getDate();
+//        return $this->dateOfUse->getDate();
+        return $this->dateOfUse;
     }
 
     /**
