@@ -5,7 +5,7 @@ namespace Asobiba\Domain\Models\User;
 class CustomerEmail
 {
 	
-	private $email;
+	public $email;
 
 	public function __construct(string $email)
 	{

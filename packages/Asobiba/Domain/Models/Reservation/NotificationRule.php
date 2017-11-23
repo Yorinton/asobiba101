@@ -5,15 +5,19 @@ namespace Asobiba\Domain\Models\Reservation;
 class NotificationRule
 {
 
+    private $method;
 
-    public function getNotification(Reservation $reservation)
+    public function __construct(Reservation $reservation)
     {
-        if(!$reservation->hasQuestion()){
-            return 'ToCustomerNotQuestion';
+        if (!$reservation->hasQuestion()) {
+            $this->method = 'ToCustomerNotQuestion';
+        } elseif ($reservation->hasQuestion()) {
+            $this->method = 'ToCustomerWithQuestion';
         }
-        if($reservation->hasQuestion()){
-            return 'ToCustomerWithQuestion';
-        }
+    }
 
+    public function getNotifyMethod()
+    {
+        return $this->method;
     }
 }

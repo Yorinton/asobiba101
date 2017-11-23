@@ -30,8 +30,11 @@ class AcceptanceReservationService
     {
 
         //Reservationエンティティ生成
-        $reservation = $this->reservationRepo->new($req);
-
+        try {
+            $reservation = $this->reservationRepo->new($req);
+        }catch(\InvalidArgumentException $e){
+            return $e->getMessage();
+        }
         //Customer永続化
         $this->customerRepo->persist($reservation->getCustomer());
 

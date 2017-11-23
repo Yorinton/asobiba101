@@ -3,6 +3,7 @@
 namespace Infrastructure\Notification;
 
 use Asobiba\Domain\Models\Notification\ReservationNotificationInterface;
+use Asobiba\Domain\Models\Reservation\NotificationRule;
 use Asobiba\Domain\Models\Reservation\Reservation;
 use Mail;
 
@@ -12,8 +13,12 @@ class MailReservationNotification implements ReservationNotificationInterface
 
     public function notifyToCustomer(Reservation $reservation): bool
     {
-        return true;
-        $mailable = 'App\Mail\\'.$reservation->getNotification()->getNotification();
+        $notification = new NotificationRule($reservation);
+        $notifyMethod = $notification->getNotifyMethod();
+
+        $mailable = 'App\Mail\\'.$notifyMethod;
+
+//        dd($mailable);
 
         Mail::to($reservation->getCustomer()->getEmail())
             ->send(new $mailable($reservation->getCustomer(),$reservation));

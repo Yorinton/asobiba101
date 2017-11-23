@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Asobiba\Application\Service\AcceptanceReservationService;
+use Asobiba\Domain\Models\Factory\CustomerFactory;
+use Asobiba\Domain\Models\Factory\ReservationFactory;
 use Asobiba\Domain\Models\Notification\ReservationNotificationInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
@@ -50,5 +52,10 @@ class AppServiceProvider extends ServiceProvider
                 );
             }
         );
+        $this->app->bind(ReservationFactory::class,function(){
+            return new ReservationFactory(
+                new CustomerFactory()
+            );
+        });
     }
 }
