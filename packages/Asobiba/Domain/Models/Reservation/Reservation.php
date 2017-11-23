@@ -80,9 +80,9 @@ class Reservation
     /**
      * @return ReservationId
      */
-    public function getId(): int
+    public function getId(): ReservationId
     {
-        return $this->id->getId();
+        return $this->id;
     }
 
 
@@ -102,13 +102,13 @@ class Reservation
 
 
     /**
-     * get price of plan of this reservation
+     * get plan of this reservation
      *
-     * @return int
+     * @return Plan
      */
-    public function getPriceOfPlan(): int
+    public function getPlan(): Plan
     {
-        return $this->plan->getPrice();
+        return $this->plan;
     }
 
 
@@ -137,18 +137,18 @@ class Reservation
      *
      * @return int
      */
-    public function getCapacity(): int
+    public function getCapacity(): Capacity
     {
-        return $this->capacity->getCapacity();
+        return $this->capacity;
     }
     /**
      * get number of guests.
      *
      * @return int
      */
-    public function getNumber(): int
+    public function getNumber(): Number
     {
-        return $this->number->getNumber();
+        return $this->number;
     }
 
     /**
@@ -156,9 +156,9 @@ class Reservation
      *
      * @return string
      */
-    public function getQuestion(): string
+    public function getQuestion(): Question
     {
-        return $this->question->getQuestion();
+        return $this->question;
     }
 
     /**

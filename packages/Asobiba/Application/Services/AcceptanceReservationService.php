@@ -28,6 +28,7 @@ class AcceptanceReservationService
     //カスタマーからのリクエストを受け取ってDBに保存 + 自動返信メール送信
     public function reserve(array $req)//Requestに依存すると独自のリクエストクラスを定義した時にここにも変更を加えないといけない
     {
+
         //Reservationエンティティ生成
         $reservation = $this->reservationRepo->new($req);
 

@@ -4,7 +4,6 @@ namespace Asobiba\Domain\Models\Reservation;
 
 class NotificationRule
 {
-    private $notification;
 
 
     public function getNotification(Reservation $reservation)
