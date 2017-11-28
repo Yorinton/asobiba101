@@ -27,6 +27,9 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
     }
 
 
+    /**
+     * @return ReservationId
+     */
     public function nextIdentity(): ReservationId
     {
         DB::table($this->sequence_table_name)->update(["nextval" => DB::raw("LAST_INSERT_ID(nextval + 1)")]);
@@ -36,6 +39,10 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
     }
 
 
+    /**
+     * @param array $req
+     * @return Reservation
+     */
     public function new(array $req): Reservation
     {
         //エンティティの一意な識別子を生成
@@ -46,6 +53,9 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
         return $this->factory->createFromRequest($customerId, $reservationId, $req);
     }
 
+    /**
+     * @param Reservation $reservation
+     */
     public function persist(Reservation $reservation)
     {
         DB::beginTransaction();
