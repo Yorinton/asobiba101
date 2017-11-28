@@ -34,6 +34,6 @@ class ToCustomerNotQuestion extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('emails.customer_r_nq');
     }
 }

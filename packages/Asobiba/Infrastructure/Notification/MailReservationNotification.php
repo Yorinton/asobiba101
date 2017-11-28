@@ -18,8 +18,6 @@ class MailReservationNotification implements ReservationNotificationInterface
 
         $mailable = 'App\Mail\\'.$notifyMethod;
 
-//        dd($mailable);
-
         Mail::to($reservation->getCustomer()->getEmail())
             ->send(new $mailable($reservation->getCustomer(),$reservation));
 

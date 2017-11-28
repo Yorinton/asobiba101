@@ -3,6 +3,7 @@
 namespace Tests\Feature\Reservation;
 
 use Asobiba\Domain\Models\Factory\ReservationFactory;
+use Asobiba\Domain\Models\Notification\ReservationNotificationInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
 use Infrastructure\Notification\MailReservationNotification;
@@ -34,21 +35,49 @@ class NotifyTest extends TestCase
      *
      * @return void
      */
-    public function testNotifyToCustomer()
+    public function testNotifyToCustomerWithQuestion()
     {
         $this->prepare();
 
         $req = reqToArray(makeCorrectRequest());
 
-        $notification = new MailReservationNotification();
-        $factory = $this->app->make(ReservationFactory::class);
+        //Notificationの生成
+        $notification = $this->app->make(ReservationNotificationInterface::class);
 
+        //一意な識別子の生成
         $customerRepo = $this->app->make(CustomerRepositoryInterface::class);
         $reservationRepo = $this->app->make(ReservationRepositoryInterface::class);
-
         $customerId = $customerRepo->nextIdentity();
         $reservationId = $reservationRepo->nextIdentity();
 
+        //Reservationエンティティの生成
+        $factory = $this->app->make(ReservationFactory::class);
+        $reservation = $factory->createFromRequest($customerId,$reservationId,$req);
+
+        $notification->notifyToCustomer($reservation);
+
+        $this->assertTrue(true);
+
+        $this->finish();
+    }
+
+    public function testNotifyToCustomerWithoutQuestion()
+    {
+        $this->prepare();
+
+        $req = reqToArray(makeRequestWithoutQuestion());
+
+        //Notificationの生成
+        $notification = $this->app->make(ReservationNotificationInterface::class);
+
+        //一意な識別子の生成
+        $customerRepo = $this->app->make(CustomerRepositoryInterface::class);
+        $reservationRepo = $this->app->make(ReservationRepositoryInterface::class);
+        $customerId = $customerRepo->nextIdentity();
+        $reservationId = $reservationRepo->nextIdentity();
+
+        //Reservationエンティティの生成
+        $factory = $this->app->make(ReservationFactory::class);
         $reservation = $factory->createFromRequest($customerId,$reservationId,$req);
 
         $notification->notifyToCustomer($reservation);

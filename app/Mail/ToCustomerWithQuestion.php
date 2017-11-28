@@ -34,6 +34,6 @@ class ToCustomerWithQuestion extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.customer');
+        return $this->view('emails.customer_r_wq');
     }
 }
