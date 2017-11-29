@@ -41,6 +41,7 @@ class ToCustomerNotQuestion extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.customer_r_nq');
+        return $this->view('emails.customer_r_nq')
+                    ->subject('ASOBIBA101ご予約確認・今後手続き');
     }
 }

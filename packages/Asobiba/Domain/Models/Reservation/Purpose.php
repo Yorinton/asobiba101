@@ -24,4 +24,9 @@ class Purpose
         }
         return false;
     }
+
+    public function getPurpose()
+    {
+        return $this->purpose;
+    }
 }

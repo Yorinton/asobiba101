@@ -210,6 +210,13 @@ class Reservation
         return $this->dateOfUse->getEndTime();
     }
 
+    /**
+     * @return Purpose
+     */
+    public function getPurpose(): Purpose
+    {
+        return $this->purpose;
+    }
 
     /**
      * check if this reservation has question
