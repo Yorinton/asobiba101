@@ -28,7 +28,7 @@ class Capacity
         $this->options = $options;
     }
 
-    public function getCapacity()
+    public function getCapacity():int
     {
         if ($this->options->hasLargeGroupOption()) {
             return 15;

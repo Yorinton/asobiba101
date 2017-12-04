@@ -19,6 +19,7 @@ class ToCustomerNotQuestion extends Mailable
     public $date;
     public $start;
     public $end;
+    public $pymentExpire;
     /**
      * Create a new message instance.
      *
@@ -32,6 +33,8 @@ class ToCustomerNotQuestion extends Mailable
         $this->date = $dateArr[0].'年'.$dateArr[1].'月'.$dateArr[2].'日';
         $this->start = $reservation->getStartTime().'時';
         $this->end = $reservation->getEndTime() === 9 ? '翌午前'.$reservation->getEndTime().'時' : $reservation->getEndTime().'時';
+        $expireArr = explode('-',date("Y-m-d",strtotime($reservation->getDate()->getDate() . "+1 day")));
+        $this->pymentExpire = $expireArr[2].'月'.$expireArr[2].'日';
     }
 
     /**
