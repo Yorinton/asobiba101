@@ -9,10 +9,9 @@ use Asobiba\Domain\Models\User\CustomerName;
 
 class CustomerFactory
 {
-    public function createFromRequest(CustomerId $customerId,array $req):Customer
+    public function createFromRequest(array $req):Customer
     {
         return new Customer(
-            $customerId,
             new CustomerName($req['name']),
             new CustomerEmail($req['email'])
         );

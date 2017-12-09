@@ -11,27 +11,17 @@ use Asobiba\Domain\Models\Reservation\Purpose;
 use Asobiba\Domain\Models\Reservation\Question;
 use Asobiba\Domain\Models\Reservation\Reservation;
 use Asobiba\Domain\Models\Reservation\ReservationId;
+use Asobiba\Domain\Models\User\Customer;
 use Asobiba\Domain\Models\User\CustomerId;
 
 class ReservationFactory
 {
 
-    private $customerFactory;
-
-    public function __construct(CustomerFactory $customerFactory)
+    public function createFromRequest(ReservationId $reservationId, array $req):Reservation
     {
-        $this->customerFactory = $customerFactory;
-    }
-
-
-    public function createFromRequest(CustomerId $customerId,ReservationId $reservationId, array $req):Reservation
-    {
-
-        $customer = $this->customerFactory->createFromRequest($customerId,$req);
-
         return new Reservation(
             $reservationId,
-            $customer,
+            new Customer($req['name'],$req['email']),
             $plan = new Plan($req['plan']),
             $options = new Options($req['options'], $plan, $req['end_time']),
             new DateOfUse($req['date'], $req['start_time'], $req['end_time'], $plan, $options),

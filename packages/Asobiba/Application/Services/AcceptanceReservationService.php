@@ -35,9 +35,6 @@ class AcceptanceReservationService
         }catch(\InvalidArgumentException $e){
             return $e->getMessage();
         }
-        //Customer永続化
-        $this->customerRepo->persist($reservation->getCustomer());
-
         //Reservation永続化
         $this->reservationRepo->persist($reservation);
 

@@ -46,11 +46,10 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
     public function new(array $req): Reservation
     {
         //エンティティの一意な識別子を生成
-        $customerId = $this->customerRepo->nextIdentity();
         $reservationId = $this->nextIdentity();
 
         //Reservationエンティティの生成
-        return $this->factory->createFromRequest($customerId, $reservationId, $req);
+        return $this->factory->createFromRequest($reservationId, $req);
     }
 
     /**
@@ -63,7 +62,8 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
             //Reservationの永続化
             $eloquentReservation = new EloquentReservation();
             $eloquentReservation->id = $reservation->getId()->getId();
-            $eloquentReservation->customer_id = $reservation->getCustomer()->getId()->getId();
+            $eloquentReservation->name = $reservation->getCustomer()->getName()->getName();
+            $eloquentReservation->email = $reservation->getCustomer()->getEmail()->getEmail();
             $eloquentReservation->plan = $reservation->getPlan()->getPlan();
             $eloquentReservation->price = $reservation->getPlan()->getPrice();
             $eloquentReservation->number = $reservation->getNumber()->getNumber();
