@@ -4,8 +4,8 @@
 
 <div>
     <ul>
-        <li>お名前：{{ $customer->getName()->getName() }}様</li>
-        <li>メールアドレス：{{ $customer->getEmail()->getEmail() }}</li>
+        <li>お名前：{{ $reservation->getCustomer()->getName() }}様</li>
+        <li>メールアドレス：{{ $reservation->getCustomer()->getEmail() }}</li>
         <li>プラン：{{ $reservation->getPlan()->getPlan() }} / {{ $reservation->getPlan()->getPrice() }}円</li>
         <li>オプション：
             @foreach($reservation->getOptionAndPriceSet() as $option => $price)

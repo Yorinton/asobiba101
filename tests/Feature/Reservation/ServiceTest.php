@@ -15,15 +15,12 @@ class ServiceTest extends TestCase
     public function prepare()
     {
         DB::table('reservation_seqs')->insert(["nextval" => 0]);
-        DB::table('customer_seqs')->insert(["nextval" => 0]);
     }
 
     public function finish()
     {
         //要修正
-        DB::delete('delete from customer_seqs');
         DB::delete('delete from reservation_seqs');
-        DB::delete('delete from customers');
         DB::statement("alter table options auto_increment = 1");
 
     }
@@ -46,18 +43,14 @@ class ServiceTest extends TestCase
         $this->assertDatabaseHas('reservations', [
             'plan' => '【非商用】基本プラン(平日)',
             'id' => 1,
-            'customer_id' => 1,
+            'name' => 'テストユーザー',
+            'email' => 'sansan106700@gmail.com',
             'status' => 'Contact',
             'price' => 19500,
             'date' => '2017-11-26',
             'number' => 10
         ]);
 
-        $this->assertDatabaseHas('customers', [
-            'id' => 1,
-            'name' => 'テストユーザー',
-            'email' => 'sansan106700@gmail.com'
-        ]);
 
         $options = ['ゴミ処理' => 1500, 'カセットコンロ' => 1500, '宿泊(1〜3名様)' => 6000];
         foreach ($options as $option => $price) {
@@ -75,17 +68,12 @@ class ServiceTest extends TestCase
         $this->assertDatabaseHas('reservations', [
             'plan' => '【非商用】基本プラン(平日)',
             'id' => 2,
-            'customer_id' => 2,
+            'name' => 'テストユーザー',
+            'email' => 'sansan106700@gmail.com',
             'status' => 'Contact',
             'price' => 19500,
             'date' => '2017-11-26',
             'number' => 10
-        ]);
-
-        $this->assertDatabaseHas('customers', [
-            'id' => 2,
-            'name' => 'テストユーザー',
-            'email' => 'sansan106700@gmail.com'
         ]);
 
         $options = ['ゴミ処理' => 1500, 'カセットコンロ' => 1500, '宿泊(1〜3名様)' => 6000];

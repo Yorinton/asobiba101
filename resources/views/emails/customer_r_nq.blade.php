@@ -1,5 +1,5 @@
 <html>
-<p>{{ $customer->getName()->getName() }}様</p>
+<p>{{ $reservation->getCustomer()->getName() }}様</p>
 
 <p>この度はお問い合わせ頂きありがとうございます！</p>
 <p>ASOBIBA101を運営しております香月(カツキ)と申します。</p>

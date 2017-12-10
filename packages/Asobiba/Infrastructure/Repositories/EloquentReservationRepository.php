@@ -16,14 +16,12 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
 {
 
     private $factory;
-    private $customerRepo;
     private $sequence_table_name = 'reservation_seqs';
 
 
-    public function __construct(ReservationFactory $factory, CustomerRepositoryInterface $customerRepo)
+    public function __construct(ReservationFactory $factory)
     {
         $this->factory = $factory;
-        $this->customerRepo = $customerRepo;
     }
 
 
@@ -62,8 +60,8 @@ class EloquentReservationRepository implements ReservationRepositoryInterface
             //Reservationの永続化
             $eloquentReservation = new EloquentReservation();
             $eloquentReservation->id = $reservation->getId()->getId();
-            $eloquentReservation->name = $reservation->getCustomer()->getName()->getName();
-            $eloquentReservation->email = $reservation->getCustomer()->getEmail()->getEmail();
+            $eloquentReservation->name = $reservation->getCustomer()->getName();
+            $eloquentReservation->email = $reservation->getCustomer()->getEmail();
             $eloquentReservation->plan = $reservation->getPlan()->getPlan();
             $eloquentReservation->price = $reservation->getPlan()->getPrice();
             $eloquentReservation->number = $reservation->getNumber()->getNumber();
