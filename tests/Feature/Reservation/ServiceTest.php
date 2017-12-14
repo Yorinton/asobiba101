@@ -88,6 +88,22 @@ class ServiceTest extends TestCase
         $this->finish();
     }
 
+    //予約済み日程での予約の場合
+    public function testCheckCalenderNotAvailable()
+    {
+        $request = reqToArray(makeCorrectRequest());
+
+        $service = $this->app->make(AcceptanceReservationService::class);
+
+        try {
+            $service->reserve($request);
+            $this->fail('例外無し');
+        }catch(\InvalidArgumentException $e){
+            $this->assertEquals('ご希望の時間帯は別の方が予約済みです',$e->getMessage());
+        }
+
+    }
+
     public function testRequestToArray()
     {
         $request = makeCorrectRequest();
