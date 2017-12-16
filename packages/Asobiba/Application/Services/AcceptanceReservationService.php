@@ -35,6 +35,9 @@ class AcceptanceReservationService
         }catch(\InvalidArgumentException $e){
             return $e->getMessage();
         }
+        //空き状況のチェック
+        
+
         //Reservation永続化
         $this->reservationRepo->persist($reservation);
 
