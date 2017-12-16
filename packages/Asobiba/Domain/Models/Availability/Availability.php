@@ -28,7 +28,8 @@ class Availability
         $end = $reservation->getDate()->getEndTime();
 
         if($this->calendar->isEvent($date,$start,$end)){
-           throw new \InvalidArgumentException('ご希望の時間帯は別の方が予約済みです');
+            //独自例外に変更
+            throw new \InvalidArgumentException('ご希望の時間帯は別の方が予約済みです');
         }
         return true;
     }
@@ -41,7 +42,11 @@ class Availability
         $start = $reservation->getdate()->getStartTime();
         $end = $reservation->getDate()->getEndTime();
 
-        return $this->calendar->createEvent($date,$start,$end);
+        if(!$this->calendar->createEvent($date,$start,$end)){
+            //独自例外に変更
+            throw new \UnexpectedValueException('日程の確保に失敗しました');
+        }
+        return true;
     }
 
 }
