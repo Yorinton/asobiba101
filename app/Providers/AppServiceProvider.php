@@ -3,11 +3,14 @@
 namespace App\Providers;
 
 use Asobiba\Application\Service\AcceptanceReservationService;
+use Asobiba\Domain\Availability\Availability;
+use Asobiba\Domain\Models\Calendar\CalendarInterface;
 use Asobiba\Domain\Models\Factory\CustomerFactory;
 use Asobiba\Domain\Models\Factory\ReservationFactory;
 use Asobiba\Domain\Models\Notification\ReservationNotificationInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\CustomerRepositoryInterface;
 use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
+use Asobiba\Infrastructure\Calendar\GoogleCalendar;
 use Asobiba\Infrastructure\Repositories\EloquentCustomerRepository;
 use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
 use Illuminate\Support\ServiceProvider;
@@ -44,11 +47,22 @@ class AppServiceProvider extends ServiceProvider
           ReservationNotificationInterface::class,
           MailReservationNotification::class
         );
+        $this->app->bind(
+            CalendarInterface::class,
+            GoogleCalendar::class
+        );
+        $this->app->bind(
+            Availability::class,function(){
+                return new Availability(
+                    $this->app->make(CalendarInterface::class)
+                );
+        });
         $this->app->bind(AcceptanceReservationService::class,function(){
                 return new AcceptanceReservationService(
                     $this->app->make(CustomerRepositoryInterface::class),
                     $this->app->make(ReservationRepositoryInterface::class),
-                    $this->app->make(ReservationNotificationInterface::class)
+                    $this->app->make(ReservationNotificationInterface::class),
+                    $this->app->make(Availability::class)
                 );
             }
         );
