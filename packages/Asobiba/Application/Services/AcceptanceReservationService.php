@@ -45,6 +45,7 @@ class AcceptanceReservationService
 
         //Reservation永続化
         $this->reservationRepo->persist($reservation);
+        //空き状況の永続化?
 
         //自動メール送信
         $this->notification->notifyToCustomer($reservation);
