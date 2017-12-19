@@ -31,25 +31,23 @@ class GoogleCalendar implements CalendarInterface
         return false;
     }
 
-    public function createEvent(string $date,int $start,int $end): bool
+    public function createEvent(string $startDateTime,string $endDateTime,string $summary = '',string $location = '',string $desc = ''): bool
     {
         try {
             $event = new \Google_Service_Calendar_Event([
-                'summary' => '仮押さえ',
-                'location' => '東京都墨田区押上１丁目１−２',
-                'description' => '東京スカイツリー・バンジージャンプイベント！',
+                'summary' => $summary,
+                'location' => $location,
+                'description' => $desc,
                 'start' => [
-                    'dateTime' => '2017-05-16T09:00:00-07:00',
+                    'dateTime' => $startDateTime,
                     'timeZone' => 'Asia/Tokyo',
                 ],
                 'end' => [
-                    'dateTime' => '2017-05-16T17:00:00-07:00',
+                    'dateTime' => $endDateTime,
                     'timeZone' => 'Asia/Tokyo',
                 ]
             ]);
             $new_event = $this->service->events->insert($this->calendarId, $event);
-
-            //空き状況の永続化？
 
             return true;
         }catch(\Exception $e){

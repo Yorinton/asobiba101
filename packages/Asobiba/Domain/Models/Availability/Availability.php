@@ -13,6 +13,7 @@ class Availability
     public function __construct(CalendarInterface $calendar)
     {
         $this->calendar = $calendar;
+        date_default_timezone_set('Asia/Tokyo');
     }
 
 
@@ -42,7 +43,16 @@ class Availability
         $start = $reservation->getdate()->getStartTime();
         $end = $reservation->getDate()->getEndTime();
 
-        if(!$this->calendar->createEvent($date,$start,$end)){
+        $dateArr = explode('-',$date);
+        $year = $dateArr[0];
+        $month = $dateArr[1];
+        $day = $dateArr[2];
+
+        $startDateTime = date('c',mktime($start,0,0,$month,$day,$year));
+        $endDateTime = date('c',mktime($end,0,0,$month,$day,$year));
+        $summary = '仮押さえ(自)';
+
+        if(!$this->calendar->createEvent($startDateTime,$endDateTime,$summary)){
             //独自例外に変更
             throw new \UnexpectedValueException('日程の確保に失敗しました');
         }
