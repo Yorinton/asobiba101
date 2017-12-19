@@ -5,6 +5,8 @@ namespace Asobiba\Infrastructure\Calendar;
 use Asobiba\Domain\Models\Calendar\CalendarInterface;
 use Google_Client;
 use Google_Service_Calendar;
+use Google_Service_Calendar_FreeBusyRequest;
+use Google_Service_Calendar_FreeBusyRequestItem;
 
 class GoogleCalendar implements CalendarInterface
 {
@@ -12,6 +14,8 @@ class GoogleCalendar implements CalendarInterface
     private $client;
     private $service;
     private $calendarId;
+    private $freebusyReq;
+    private $freebusyReqItem;
 
     public function __construct()
     {
@@ -22,13 +26,28 @@ class GoogleCalendar implements CalendarInterface
         $this->client->addScope(Google_Service_Calendar::CALENDAR);//https://www.googleapis.com/auth/calendar
         $this->service = new \Google_Service_Calendar($this->client);
         $this->calendarId = env('GOOGLE_CALENDAR_ID');
+
     }
 
 
-    public function isEvent(string $date,int $start,int $end): bool
+    public function isBusy(string $startDateTime,string $endDateTime): bool
     {
-        // TODO: Implement isEvent() method.
-        return false;
+        $this->freebusyReq = new Google_Service_Calendar_FreeBusyRequest(
+            [
+                'timeMin' => $startDateTime,
+                'timeMax' => $endDateTime,
+                'timeZone' => 'Asia/Tokyo',
+                'items' => [
+                    ['id' => $this->calendarId]
+                ]
+            ]
+        );
+
+        $result = $this->service->freebusy->query($this->freebusyReq);
+        if($result->getCalendars()[$this->calendarId]->getBusy() === []){
+            return false;
+        }
+        return true;
     }
 
     public function createEvent(string $startDateTime,string $endDateTime,string $summary = '',string $location = '',string $desc = '')

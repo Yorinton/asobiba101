@@ -13,23 +13,38 @@ class CalendarTest extends TestCase
      *
      * @return void
      */
-    public function testIsNotEvent()
+    public function testIsNotBusy()
     {
+        date_default_timezone_set('Asia/Tokyo');
         $calendar = $this->app->make(CalendarInterface::class);
-        $date = '2018-01-23';
-        $start = 11;
+        $date = '2017-12-19';
+        $start = 17;
         $end = 22;
+        $dateArr = explode('-',$date);
+        $year = $dateArr[0];
+        $month = $dateArr[1];
+        $day = $dateArr[2];
 
-        $this->assertFalse($calendar->isEvent($date,$start,$end));
+        $startDateTime = date('c',mktime($start,0,0,$month,$day,$year));
+        $endDateTime = date('c',mktime($end,0,0,$month,$day,$year));
+        $this->assertFalse($result = $calendar->isBusy($startDateTime,$endDateTime));
     }
 
-    public function testIsEvent(){
+    public function testIsBusy(){
+
+        date_default_timezone_set('Asia/Tokyo');
         $calendar = $this->app->make(CalendarInterface::class);
-        $date = '2018-01-07';
+        $date = '2017-12-19';
         $start = 11;
         $end = 22;
+        $dateArr = explode('-',$date);
+        $year = $dateArr[0];
+        $month = $dateArr[1];
+        $day = $dateArr[2];
 
-        $this->assertTrue($calendar->isEvent($date,$start,$end));
+        $startDateTime = date('c',mktime($start,0,0,$month,$day,$year));
+        $endDateTime = date('c',mktime($end,0,0,$month,$day,$year));
+        $this->assertTrue($result = $calendar->isBusy($startDateTime,$endDateTime));
     }
 
     public function testCreateEvent()

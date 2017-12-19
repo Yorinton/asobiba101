@@ -28,7 +28,7 @@ class Availability
         $start = $reservation->getdate()->getStartTime();
         $end = $reservation->getDate()->getEndTime();
 
-        if($this->calendar->isEvent($date,$start,$end)){
+        if($this->calendar->isBusy($date,$start,$end)){
             //独自例外に変更
             throw new \InvalidArgumentException('ご希望の時間帯は別の方が予約済みです');
         }
