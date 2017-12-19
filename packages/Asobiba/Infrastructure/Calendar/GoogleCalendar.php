@@ -48,8 +48,9 @@ class GoogleCalendar implements CalendarInterface
                 ]
             ]);
             $new_event = $this->service->events->insert($this->calendarId, $event);
+            $eventId = $new_event->getId();
 
-            return true;
+            return $eventId;
         }catch(\Exception $e){
             return false;
         }
