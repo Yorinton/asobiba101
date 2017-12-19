@@ -50,9 +50,8 @@ class CalendarTest extends TestCase
         $endDateTime = date('c',mktime($end,0,0,$month,$day,$year));
         $summary = '仮押さえ(自)';
 
-        $result = $calendar->createEvent($startDateTime,$endDateTime,$summary);
+        $eventId = $calendar->createEvent($startDateTime,$endDateTime,$summary);
 
-        $this->assertTrue($result);
-
+        dd($eventId);
     }
 }

@@ -31,7 +31,7 @@ class GoogleCalendar implements CalendarInterface
         return false;
     }
 
-    public function createEvent(string $startDateTime,string $endDateTime,string $summary = '',string $location = '',string $desc = ''): bool
+    public function createEvent(string $startDateTime,string $endDateTime,string $summary = '',string $location = '',string $desc = '')
     {
         try {
             $event = new \Google_Service_Calendar_Event([
