@@ -2,12 +2,34 @@
 
 namespace Tests\Unit;
 
+use Asobiba\Domain\Availability\Availability;
 use Asobiba\Domain\Models\Calendar\CalendarInterface;
+use Asobiba\Domain\Models\Repositories\Reservation\ReservationRepositoryInterface;
+use Asobiba\Infrastructure\Repositories\EloquentReservationRepository;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CalendarTest extends TestCase
 {
+
+    use RefreshDatabase;
+
+
+
+    public function repository()
+    {
+        DB::table('reservation_seqs')->insert(["nextval" => 0]);
+        return $this->app->make(ReservationRepositoryInterface::class);
+    }
+
+    public function finish()
+    {
+        //要修正
+        DB::delete('delete from reservation_seqs');
+        DB::statement("alter table options auto_increment = 1");
+
+    }
     /**
      * A basic test example.
      *
@@ -67,6 +89,56 @@ class CalendarTest extends TestCase
 
         $eventId = $calendar->createEvent($startDateTime,$endDateTime,$summary);
 
-        dd($eventId);
+        $this->assertTrue(true);
+    }
+
+    public function testIsNotAvailable()
+    {
+        try {
+            $req = makeCorrectRequest();
+            $req->date = '2017-12-19';
+            $req->options = array_splice($req->options,0,2);
+
+
+            $reqArr = reqToArray($req);
+
+
+            $reservation = $this->repository()->new($reqArr);
+
+            $availability = $this->app->make(Availability::class);
+            $availability->isAvailable($reservation);
+
+            $this->finish();
+            $this->fail('例外なし');
+        }catch(\Exception $e){
+
+            $this->finish();
+            $this->assertEquals('ご希望の時間帯は別の方が予約済みです',$e->getMessage());
+        }
+    }
+
+    public function testIsAvailable()
+    {
+        try {
+            $req = makeCorrectRequest();
+            $req->date = '2017-01-19';
+            $req->options = array_splice($req->options,0,2);
+
+
+            $reqArr = reqToArray($req);
+
+
+            $reservation = $this->repository()->new($reqArr);
+
+            $availability = $this->app->make(Availability::class);
+
+            $this->assertTrue($availability->isAvailable($reservation));
+            $this->finish();
+        }catch(\Exception $e){
+
+            $this->finish();
+            $this->fail('例外発生：'.$e->getMessage());
+
+        }
     }
 }

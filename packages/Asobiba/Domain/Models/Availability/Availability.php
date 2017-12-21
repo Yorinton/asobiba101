@@ -24,11 +24,10 @@ class Availability
     public function isAvailable(Reservation $reservation): bool
     {
         //$reservationから日程、時間を抽出
-        $date = $reservation->getdate()->getDate();
-        $start = $reservation->getdate()->getStartTime();
-        $end = $reservation->getDate()->getEndTime();
+        $startDateTime = $this->toDatetimeFormat($reservation->getdate()->getDate(),$reservation->getdate()->getStartTime());
+        $endDateTime = $this->toDatetimeFormat($reservation->getdate()->getDate(),$reservation->getDate()->getEndTime());
 
-        if($this->calendar->isBusy($date,$start,$end)){
+        if($this->calendar->isBusy($startDateTime,$endDateTime)){
             //独自例外に変更
             throw new \InvalidArgumentException('ご希望の時間帯は別の方が予約済みです');
         }
@@ -39,24 +38,38 @@ class Availability
     public function keepDate(Reservation $reservation): bool
     {
         //$reservationから日程、時間を抽出
-        $date = $reservation->getdate()->getDate();
-        $start = $reservation->getdate()->getStartTime();
-        $end = $reservation->getDate()->getEndTime();
+//        $date = $reservation->getdate()->getDate();
+//        $start = $reservation->getdate()->getStartTime();
+//        $end = $reservation->getDate()->getEndTime();
+//
+//        $dateArr = explode('-',$date);
+//        $year = $dateArr[0];
+//        $month = $dateArr[1];
+//        $day = $dateArr[2];
 
-        $dateArr = explode('-',$date);
-        $year = $dateArr[0];
-        $month = $dateArr[1];
-        $day = $dateArr[2];
-
-        $startDateTime = date('c',mktime($start,0,0,$month,$day,$year));
-        $endDateTime = date('c',mktime($end,0,0,$month,$day,$year));
+        $startDateTime = $this->toDatetimeFormat($reservation->getdate()->getDate(),$reservation->getdate()->getStartTime());
+        $endDateTime = $this->toDatetimeFormat($reservation->getdate()->getDate(),$reservation->getDate()->getEndTime());
         $summary = '仮押さえ(自)';
+
+//        $startDateTime = date('c',mktime($start,0,0,$month,$day,$year));
+//        $endDateTime = date('c',mktime($end,0,0,$month,$day,$year));
 
         if(!$this->calendar->createEvent($startDateTime,$endDateTime,$summary)){
             //独自例外に変更
             throw new \UnexpectedValueException('日程の確保に失敗しました');
         }
         return true;
+    }
+
+    //Reservationから抽出した日程をフォーマット
+    private function toDatetimeFormat(string $date,int $hour)
+    {
+        $dateArr = explode('-',$date);
+        $year = $dateArr[0];
+        $month = $dateArr[1];
+        $day = $dateArr[2];
+
+        return date('c',mktime($hour,0,0,$month,$day,$year));
     }
 
 }
