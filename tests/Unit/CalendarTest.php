@@ -141,4 +141,21 @@ class CalendarTest extends TestCase
 
         }
     }
+
+
+    public function testKeepDate()
+    {
+        $req = makeCorrectRequest();
+        $req->date = '2018-01-19';
+        $req->options = array_splice($req->options,0,2);
+
+        $reqArr = reqToArray($req);
+
+        $reservation = $this->repository()->new($reqArr);
+
+        $availability = $this->app->make(Availability::class);
+
+        $this->assertTrue($availability->keepDate($reservation));
+
+    }
 }

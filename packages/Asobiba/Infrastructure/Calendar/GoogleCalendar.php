@@ -6,7 +6,6 @@ use Asobiba\Domain\Models\Calendar\CalendarInterface;
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_FreeBusyRequest;
-use Google_Service_Calendar_FreeBusyRequestItem;
 
 class GoogleCalendar implements CalendarInterface
 {
@@ -15,7 +14,6 @@ class GoogleCalendar implements CalendarInterface
     private $service;
     private $calendarId;
     private $freebusyReq;
-    private $freebusyReqItem;
 
     public function __construct()
     {
