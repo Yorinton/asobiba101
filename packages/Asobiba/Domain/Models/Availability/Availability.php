@@ -37,22 +37,10 @@ class Availability
     //予約追加の成否をbooleanで返す
     public function keepDate(Reservation $reservation): bool
     {
-        //$reservationから日程、時間を抽出
-//        $date = $reservation->getdate()->getDate();
-//        $start = $reservation->getdate()->getStartTime();
-//        $end = $reservation->getDate()->getEndTime();
-//
-//        $dateArr = explode('-',$date);
-//        $year = $dateArr[0];
-//        $month = $dateArr[1];
-//        $day = $dateArr[2];
 
         $startDateTime = $this->toDatetimeFormat($reservation->getdate()->getDate(),$reservation->getdate()->getStartTime());
         $endDateTime = $this->toDatetimeFormat($reservation->getdate()->getDate(),$reservation->getDate()->getEndTime());
         $summary = '仮押さえ(自)';
-
-//        $startDateTime = date('c',mktime($start,0,0,$month,$day,$year));
-//        $endDateTime = date('c',mktime($end,0,0,$month,$day,$year));
 
         if(!$this->calendar->createEvent($startDateTime,$endDateTime,$summary)){
             //独自例外に変更
@@ -64,12 +52,17 @@ class Availability
     //Reservationから抽出した日程をフォーマット
     private function toDatetimeFormat(string $date,int $hour)
     {
+
+        $date = $hour === 9 ? date('Y-m-d',strtotime($date.'+ 1 day')) : $date;
+
         $dateArr = explode('-',$date);
         $year = $dateArr[0];
         $month = $dateArr[1];
         $day = $dateArr[2];
 
-        return date('c',mktime($hour,0,0,$month,$day,$year));
+        $datetime = date('c',mktime($hour,0,0,$month,$day,$year));
+
+        return $datetime;
     }
 
 }

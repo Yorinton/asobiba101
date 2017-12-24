@@ -97,7 +97,7 @@ class CalendarTest extends TestCase
         try {
             $req = makeCorrectRequest();
             $req->date = '2017-12-19';
-            $req->options = array_splice($req->options,0,2);
+//            $req->options = array_splice($req->options,0,2);
 
 
             $reqArr = reqToArray($req);
@@ -121,8 +121,8 @@ class CalendarTest extends TestCase
     {
         try {
             $req = makeCorrectRequest();
-            $req->date = '2017-01-19';
-            $req->options = array_splice($req->options,0,2);
+            $req->date = '2018-01-19';
+//            $req->options = array_splice($req->options,0,2);
 
 
             $reqArr = reqToArray($req);

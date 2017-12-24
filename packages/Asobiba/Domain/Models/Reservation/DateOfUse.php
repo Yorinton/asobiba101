@@ -19,9 +19,7 @@ class DateOfUse
 	
 	public function __construct($date,$start_time,$end_time,Plan $plan,Options $options)
 	{
-		if(!$this->isAvailable($date,$start_time,$end_time)){
-			throw new \InvalidArgumentException('ご希望の時間帯は別の方が予約済みです');
-		}
+
 		if(!$this->isAcceptableStartAndEndTime($start_time,$end_time,$plan)){
 		    throw new \InvalidArgumentException('不正な開始時刻又は終了時刻が入力されています');
         }
@@ -36,11 +34,6 @@ class DateOfUse
 		$this->end_time = $this->optimizeEndTime($options,$end_time);
 	}
 
-	public function isAvailable($date,$start_time,$end_time)
-	{
-		//Googleカレンダーに問い合わせる
-		return true;
-	}
 
 	private function isAcceptableStartAndEndTime($start_time,$end_time,$plan)
     {
